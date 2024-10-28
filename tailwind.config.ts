@@ -6,7 +6,8 @@ export default {
     extend: {
       fontFamily: {
         sans: [
-          "\"Inter\"",
+          "\"Roboto\"",
+          "\"Noto Sans SC\"",
           "ui-sans-serif",
           "system-ui",
           "sans-serif",
@@ -15,6 +16,9 @@ export default {
           "\"Segoe UI Symbol\"",
           "\"Noto Color Emoji\"",
         ],
+      },
+      screens: {
+        "3xl": "1920px",
       },
     },
   },

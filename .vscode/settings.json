@@ -46,5 +46,10 @@
     "scss",
     "pcss",
     "postcss"
+  ],
+
+  // For tailwindcss & clsx
+  "tailwindCSS.experimental.classRegex": [
+    ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^\"'`]*)(?:'|\"|`)"]
   ]
 }
