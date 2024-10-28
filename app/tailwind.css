@@ -7,5 +7,14 @@
 }
 
 html, body {
-  @apply bg-stone-100;
+}
+
+.dark,
+:root[class~="dark"] {
+}
+
+@layer utilities {
+  .allow-discrete {
+    transition-behavior: allow-discrete;
+  }
 }
