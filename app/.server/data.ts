@@ -1,4 +1,5 @@
 export interface Tag {
+  id: number;
   name: string;
   count: number;
 }
@@ -31,6 +32,7 @@ export async function getFakeArticleList() {
       datetime: "2024-10-29 11:45",
       archived: false,
       tag: {
+        id: 1,
         count: 1,
         name: "Remix",
       },
@@ -46,6 +48,12 @@ export async function getFakeStatistics() {
     articles: 1,
     words: 3691345,
   };
+
+  return data;
+}
+
+export async function getFakeTagList() {
+  const data = Array.from<Tag>({ length: 8 }).fill({ id: 0, count: 0, name: "Remix" }).map((item, i) => ({ ...item, id: i, count: i }));
 
   return data;
 }

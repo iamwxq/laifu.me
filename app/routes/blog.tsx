@@ -1,7 +1,8 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import type { FormEvent } from "react";
 import { json } from "@remix-run/node";
-import { Form, useLoaderData, useNavigate, useSubmit } from "@remix-run/react";
+import { Form, Link, useLoaderData, useNavigate, useSubmit } from "@remix-run/react";
+import { getFakeTagList } from "~/.server/data";
 import clsx from "clsx";
 import { CircleX, Search } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -20,16 +21,23 @@ function useDebounce(fn: (...args: any[]) => any, delay: number) {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  // search params
   const url = new URL(request.url);
-  const tag = url.searchParams.get("t");
+  const t = url.searchParams.get("t");
   const search = url.searchParams.get("q");
-  return json({ tag, search });
+  const p = url.searchParams.get("p");
+
+  // data
+  const taglist = await getFakeTagList();
+
+  return json({ t, search, taglist, p });
 }
 
 function Blog() {
   const submit = useSubmit();
   const navigate = useNavigate();
-  const { search } = useLoaderData<typeof loader>();
+  const { search, taglist } = useLoaderData<typeof loader>();
+  // const [page, setPage] = useState(1);
   const [q, setQ] = useState(search || "");
   const qRef = useRef<HTMLInputElement>(null);
 
@@ -45,7 +53,7 @@ function Blog() {
   // 同时会清除对标签的筛选
   function handleClear() {
     setQ("");
-    navigate("/blog", { replace: true });
+    navigate("/blog?p=1", { replace: true });
   }
 
   useEffect(() => {
@@ -61,11 +69,13 @@ function Blog() {
       <div className="mx-auto max-w-2xl px-6 py-16">
         <div className="flex items-center gap-3 rounded-[5px] px-2 py-[5px] text-zinc-400 shadow-sm outline outline-[1.5px] outline-zinc-400 transition-all focus-within:shadow-md focus-within:outline-zinc-900 dark:bg-zinc-800 dark:outline-zinc-800 dark:focus-within:outline-zinc-100">
           <Search className="size-[18px] dark:text-zinc-300" />
+
           <Form
             className="flex-1"
             role="search"
             onChange={e => handleInput(e)}
           >
+            <input hidden defaultValue="1" name="p" />
             <input
               ref={qRef}
               aria-label="搜索文章"
@@ -86,8 +96,18 @@ function Blog() {
         </div>
       </div>
 
-      <div className="">
-        <ul></ul>
+      <div className="flex">
+        <ul className="flex flex-col ">
+          {taglist.map(tag => (
+            <Link
+              key={tag.id}
+              className="text-zinc-500 dark:text-zinc-300"
+              to={`/blog?p=1&t=${tag.name}`}
+            >
+              {tag.name}({tag.count})
+            </Link>
+          ))}
+        </ul>
 
         <ul></ul>
       </div>

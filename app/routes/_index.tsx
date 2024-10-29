@@ -41,7 +41,7 @@ function Index() {
                 <div>{article.datetime}</div>
                 <NavLink
                   className="flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-0.5 transition-all hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
-                  to={`/blog?t=${article.tag.name}`}
+                  to={`/blog?p=1&t=${article.tag.name}`}
                 >
                   <Tag className="size-[14px] rotate-90" />
                   <span>{article.tag.name}</span>
@@ -67,7 +67,7 @@ function Index() {
               <div className="mr-4 flex flex-col items-center border-r pr-4 dark:border-zinc-700">
                 <NavLink
                   className="hover:underline"
-                  to="/blog"
+                  to="/blog?p=1"
                 >
                   {fNumber(statistics.articles)}
                 </NavLink>

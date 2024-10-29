@@ -41,7 +41,7 @@ function Header() {
 
         <nav className="flex items-center justify-between">
           <NavLink
-            to="/blog"
+            to="/blog?p=1"
             className={clsx(
               "select-none rounded-md px-4 py-2 transition-all duration-75 hover:bg-zinc-100/70 dark:hover:bg-slate-900/70",
               {

@@ -21,6 +21,15 @@ export default {
       screens: {
         "3xl": "1920px",
       },
+      keyframes: {
+        spin: {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+      },
+      animation: {
+        spinning: "spin 1s linear infinite",
+      },
     },
   },
   plugins: [],
