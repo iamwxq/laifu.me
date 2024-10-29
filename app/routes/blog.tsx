@@ -9,11 +9,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 function Blog() {
-  // const { tag } = useLoaderData<typeof loader>();
+  const { tag } = useLoaderData<typeof loader>();
 
   return (
     <div>
-      abc
+      {tag}
     </div>
   );
 };
