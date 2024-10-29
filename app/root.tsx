@@ -1,5 +1,5 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { Links, Meta, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react";
 import { themeSessionResolver } from "~/.server/session";
 import clsx from "clsx";
 import { PreventFlashOnWrongTheme, ThemeProvider, useTheme } from "remix-themes";
@@ -45,15 +45,15 @@ export function App() {
         <Links />
         <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
       </head>
+
       <body>
-        <div className="relative min-h-svh bg-white dark:bg-black">
+        <div className="relative min-h-screen bg-white dark:bg-black">
           <Header />
 
-          <div className="mx-auto max-w-7xl">
-
+          <div className="mx-auto flex min-h-[calc(100vh-57px)] max-w-7xl flex-col">
+            <Outlet />
             <Footer />
           </div>
-
         </div>
 
         <ScrollRestoration />
@@ -65,6 +65,7 @@ export function App() {
 
 export default function AppWithProvider() {
   const data = useLoaderData<typeof loader>();
+
   return (
     <ThemeProvider
       specifiedTheme={data.theme}

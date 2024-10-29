@@ -1,4 +1,4 @@
-import { Link, useLocation } from "@remix-run/react";
+import { NavLink, useLocation } from "@remix-run/react";
 import clsx from "clsx";
 import { Moon, Sun } from "lucide-react";
 import { Theme, useTheme } from "remix-themes";
@@ -49,26 +49,26 @@ function Header() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <div className="flex items-center justify-center">
-          <Link
+          <NavLink
             to="/"
             className={clsx(
               "cursor-pointer select-none rounded-md px-3 py-1 text-xl font-semibold text-zinc-800",
-              "hover:bg-zinc-100/70 dark:text-zinc-50 dark:hover:bg-slate-900",
+              "hover:bg-zinc-100/70 dark:text-zinc-50 dark:hover:bg-slate-900/70",
             )}
           >
             来福
-          </Link>
+          </NavLink>
         </div>
 
         <nav className="flex items-center justify-between">
           {navlist.map(nav => (
             !nav.hidden && (
-              <Link
+              <NavLink
                 key={nav.to}
                 to={nav.to}
                 className={clsx(
                   "select-none rounded-md px-4 py-2 transition-all duration-75",
-                  "hover:bg-zinc-100/70 dark:hover:bg-slate-900",
+                  "hover:bg-zinc-100/70 dark:hover:bg-slate-900/70",
                   {
                     "font-semibold text-cyan-500": location.pathname === nav.to,
                     "text-zinc-500 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-50": location.pathname !== nav.to,
@@ -76,7 +76,7 @@ function Header() {
                 )}
               >
                 {nav.label}
-              </Link>
+              </NavLink>
             )
           ))}
         </nav>

@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  scrollbar-width: 10px;
-}
-
 html, body {
 }
 
@@ -13,8 +9,11 @@ html, body {
 :root[class~="dark"] {
 }
 
+@layer base {
+}
+
+@layer components {
+}
+
 @layer utilities {
-  .allow-discrete {
-    transition-behavior: allow-discrete;
-  }
 }

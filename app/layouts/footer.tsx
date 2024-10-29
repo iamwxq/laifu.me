@@ -6,12 +6,7 @@ function Footer() {
   const now = new Date().getFullYear();
 
   return (
-    <footer className={clsx(
-      "mx-auto flex select-none items-center p-8 text-sm text-zinc-500",
-      "dark:text-zinc-300",
-    )}
-    >
-
+    <footer className="mt-auto flex select-none items-center p-8 text-sm text-zinc-500 dark:text-zinc-300">
       <div className="transition-all">&copy; {now} 来福 Preserved</div>
 
       <em className="ml-4 border-l border-zinc-200 pl-4 not-italic">
