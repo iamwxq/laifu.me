@@ -1,12 +1,10 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { Links, Meta, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react";
-
+import { themeSessionResolver } from "~/.server/session";
 import clsx from "clsx";
-
-import { useEffect } from "react";
 import { PreventFlashOnWrongTheme, ThemeProvider, useTheme } from "remix-themes";
+import Footer from "~/layouts/footer";
 import Header from "~/layouts/header";
-import { themeSessionResolver } from "./sessions.server";
 import "~/tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -48,8 +46,14 @@ export function App() {
         <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
       </head>
       <body>
-        <div className="relative">
+        <div className="relative min-h-svh bg-white dark:bg-black">
           <Header />
+
+          <div className="mx-auto max-w-7xl">
+
+            <Footer />
+          </div>
+
         </div>
 
         <ScrollRestoration />
