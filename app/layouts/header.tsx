@@ -3,27 +3,6 @@ import clsx from "clsx";
 import { Moon, Sun } from "lucide-react";
 import { Theme, useTheme } from "remix-themes";
 
-type NavList = {
-  to: string;
-  label: string;
-  hidden?: boolean;
-}[];
-
-const navlist: NavList = [
-  {
-    to: "/blog",
-    label: "文章",
-  },
-  {
-    to: "/about",
-    label: "关于",
-  },
-  {
-    to: "/archive",
-    label: "归档",
-  },
-];
-
 function Header() {
   const location = useLocation();
   const [mode, setMode] = useTheme();
@@ -61,24 +40,44 @@ function Header() {
         </div>
 
         <nav className="flex items-center justify-between">
-          {navlist.map(nav => (
-            !nav.hidden && (
-              <NavLink
-                key={nav.to}
-                to={nav.to}
-                className={clsx(
-                  "select-none rounded-md px-4 py-2 transition-all duration-75",
-                  "hover:bg-zinc-100/70 dark:hover:bg-slate-900/70",
-                  {
-                    "font-semibold text-cyan-500": location.pathname === nav.to,
-                    "text-zinc-500 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-50": location.pathname !== nav.to,
-                  },
-                )}
-              >
-                {nav.label}
-              </NavLink>
-            )
-          ))}
+          <NavLink
+            to="/blog"
+            className={clsx(
+              "select-none rounded-md px-4 py-2 transition-all duration-75 hover:bg-zinc-100/70 dark:hover:bg-slate-900/70",
+              {
+                "font-semibold text-cyan-500": location.pathname === "/blog",
+                "text-zinc-500 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-50": location.pathname !== "/blog",
+              },
+            )}
+          >
+            文章
+          </NavLink>
+
+          <NavLink
+            to="/about"
+            className={clsx(
+              "select-none rounded-md px-4 py-2 transition-all duration-75 hover:bg-zinc-100/70 dark:hover:bg-slate-900/70",
+              {
+                "font-semibold text-cyan-500": location.pathname === "/about",
+                "text-zinc-500 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-50": location.pathname !== "/about",
+              },
+            )}
+          >
+            关于
+          </NavLink>
+
+          <NavLink
+            to="/archive"
+            className={clsx(
+              "select-none rounded-md px-4 py-2 transition-all duration-75 hover:bg-zinc-100/70 dark:hover:bg-slate-900/70",
+              {
+                "font-semibold text-cyan-500": location.pathname === "/archive",
+                "text-zinc-500 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-50": location.pathname !== "/archive",
+              },
+            )}
+          >
+            归档
+          </NavLink>
         </nav>
 
         <button

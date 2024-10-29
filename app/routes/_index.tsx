@@ -37,11 +37,11 @@ function Index() {
             >
               <h2 className="cursor-pointer text-xl font-semibold hover:underline">{article.title}</h2>
               <p className="text-zinc-600 dark:text-zinc-200">{article.brief}</p>
-              <div className="flex items-center gap-2 text-sm text-zinc-400">
+              <div className="flex items-center gap-3 text-sm text-zinc-400">
                 <div>{article.datetime}</div>
                 <NavLink
                   className="flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-0.5 transition-all dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
-                  to={`/tag/${article.tag.name.toLowerCase()}`}
+                  to={`/blog?t=${article.tag.name}`}
                 >
                   <Tag className="size-[14px] rotate-90" />
                   <span>{article.tag.name}</span>
