@@ -23,7 +23,7 @@ export async function wait(s: number) {
 }
 
 export async function getFakeArticleList() {
-  const data = Array.from<MetaData>({ length: 16 })
+  const data = Array.from<MetaData>({ length: 14 })
     .fill({
       slug: "how-to-build-blog-with-remix",
       title: "如何使用 Remix 框架构建一个博客网站",

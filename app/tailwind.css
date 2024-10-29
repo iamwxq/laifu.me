@@ -10,6 +10,10 @@ html, body {
 }
 
 @layer base {
+  input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+  }
 }
 
 @layer components {
