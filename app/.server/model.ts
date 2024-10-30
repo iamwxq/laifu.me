@@ -6,7 +6,7 @@ export interface Tag {
 }
 
 // 文章元数据
-export interface Meta {
+export interface PostMeta {
   slug: string;
   title: string;
   brief: string;
@@ -17,7 +17,7 @@ export interface Meta {
 }
 
 // 文章原始元数据
-export type RawMeta = Omit<Meta, "tag"> & { tagId: number | null };
+export type RawPostMeta = Omit<PostMeta, "tag"> & { tagId: number | null };
 
 // 首页统计数据
 export interface Statistics {

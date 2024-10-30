@@ -1,8 +1,8 @@
 import { json } from "@remix-run/node";
 import { NavLink, useLoaderData } from "@remix-run/react";
-import { findManyArticles, findStatistics } from "~/.server/dal/article";
+import { findManyArticles, findStatistics } from "~/.server/dal/post";
 import avatar from "~/assets/images/avatar.jpg";
-import Article from "~/components/article";
+import Article from "~/components/post";
 import { fNumber } from "~/utils";
 
 export async function loader() {

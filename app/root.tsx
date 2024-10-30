@@ -1,5 +1,5 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react";
+import { Links, PostMeta, Outlet, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react";
 import { themeSessionResolver } from "~/.server/session";
 import clsx from "clsx";
 import { PreventFlashOnWrongTheme, ThemeProvider, useTheme } from "remix-themes";
@@ -41,13 +41,13 @@ export function App() {
       <head>
         <meta charSet="utf-8" />
         <meta content="width=device-width, initial-scale=1" name="viewport" />
-        <Meta />
+        <PostMeta />
         <Links />
         <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
       </head>
 
       <body>
-        <div className="relative min-h-screen bg-white dark:bg-black">
+        <div className="relative min-h-screen bg-white selection:bg-zinc-200 dark:bg-black dark:selection:bg-zinc-700">
           <Header />
 
           <div className="mx-auto flex min-h-[calc(100vh-57px)] max-w-7xl flex-col px-6">

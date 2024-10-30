@@ -1,10 +1,10 @@
-import type { Meta, PRes, Statistics } from "~/.server/model";
+import type { PostMeta, PRes, Statistics } from "~/.server/model";
 import { db } from "~/.server/db";
 
 // 首页文章列表
 export async function findManyArticles() {
   try {
-    const res: Array<Meta> = await db.article.findMany({
+    const res: Array<PostMeta> = await db.article.findMany({
       take: 14,
       where: { archived: false },
       include: { tag: true },
@@ -63,7 +63,7 @@ export async function findArticlesByPage(condition: { page: number }) {
     },
   });
 
-  const data: PRes<Meta> = {
+  const data: PRes<PostMeta> = {
     page,
     pagesize,
     total,
@@ -101,7 +101,7 @@ export async function findArticlesByTagAndPage(condition: { id: number; page: nu
     },
   });
 
-  const data: PRes<Meta> = {
+  const data: PRes<PostMeta> = {
     page,
     pagesize,
     total,
@@ -143,7 +143,7 @@ export async function findArticlesByKeywordAndPage(condition: { q: string; page:
     },
   });
 
-  const data: PRes<Meta> = {
+  const data: PRes<PostMeta> = {
     page,
     pagesize,
     total,

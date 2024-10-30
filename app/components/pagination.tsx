@@ -1,4 +1,4 @@
-import { useLocation, useSearchParams } from "@remix-run/react";
+import { useSearchParams } from "@remix-run/react";
 import clsx from "clsx";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
