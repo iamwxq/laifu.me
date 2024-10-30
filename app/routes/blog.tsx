@@ -6,7 +6,7 @@ import { findArticlesByKeywordAndPage, findArticlesByPage, findArticlesByTagAndP
 import { findManyTags } from "~/.server/dal/tag";
 import clsx from "clsx";
 import { CircleX, Search } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Article from "~/components/article";
 
 function useDebounce(fn: (...args: any[]) => any, delay: number) {
@@ -47,13 +47,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
     // 仅为了路由的整洁性
     return redirect(`/blog?p=${page}`);
   }
-  if (t !== null && (id < 1 || Number.isNaN(id))) {
-    // 仅为了路由的整洁性
-    return redirect(`/blog?p=${page}`);
-  }
-
   // 获取标签列表
   const taglist = await findManyTags();
+  if (t !== null && !taglist.map(t => t.id).includes(id)) {
+    return redirect(`/blog?p=${page}`);
+  }
 
   // 获取文章结果列表
   if (q) {
@@ -69,31 +67,40 @@ export async function loader({ request }: LoaderFunctionArgs) {
     articlelist = await findArticlesByPage({ page });
   }
 
-  return json({ t, q, p, articlelist, taglist });
+  return json({ tagId: id, q, p, articlelist, taglist });
 }
 
 function Blog() {
   const submit = useSubmit();
   const navigate = useNavigate();
-  const { t, q: _q, articlelist, taglist } = useLoaderData<typeof loader>();
+  const { tagId, q, articlelist, taglist } = useLoaderData<typeof loader>();
   // const [page, setPage] = useState(1);
-  const [q, setQ] = useState(_q || "");
+  const [keyword, setKeyword] = useState(q || "");
   const qRef = useRef<HTMLInputElement>(null);
-  const tagId = Number(t);
 
   // 提交防抖
   const debouncedSubmit = useDebounce((e: EventTarget & HTMLFormElement) => submit(e, { replace: true }), 300);
 
   function handleInput(e: FormEvent<HTMLFormElement>) {
     const target = e.target as HTMLInputElement;
-    setQ(target.value);
+    setKeyword(target.value);
     debouncedSubmit(e.currentTarget);
   }
 
   // 同时会清除对标签的筛选
   function handleClear() {
-    setQ("");
+    setKeyword("");
     navigate("/blog?p=1", { replace: true });
+  }
+
+  function handleClickTag(id: number) {
+    setKeyword("");
+    if (tagId === id) {
+      navigate("/blog?p=1", { replace: true });
+    }
+    else {
+      navigate(`/blog?p=1&t=${id}`, { replace: true });
+    }
   }
 
   useEffect(() => {
@@ -101,8 +108,8 @@ function Blog() {
     if (!input)
       return;
 
-    input.value = _q || "";
-  }, [_q]);
+    input.value = q || "";
+  }, [q]);
 
   return (
     <div>
@@ -120,14 +127,14 @@ function Blog() {
               ref={qRef}
               aria-label="搜索文章"
               className="h-7 w-full text-zinc-900 outline-none transition-all dark:bg-zinc-800 dark:text-zinc-100"
-              defaultValue={q || ""}
+              defaultValue={keyword || ""}
               name="q"
               placeholder="搜索文章"
               type="search"
             />
           </Form>
           <button
-            className={clsx({ hidden: !q })}
+            className={clsx({ hidden: !keyword })}
             type="reset"
             onClick={handleClear}
           >
@@ -140,18 +147,18 @@ function Blog() {
         <aside className="sticky top-[57px] col-span-1 mx-auto max-w-lg self-start pt-6">
           <ul className="flex flex-col">
             {taglist.map(tag => (
-              <Link
+              <button
                 key={tag.id}
-                to={`/blog?p=1&t=${tag.id}`}
+                type="button"
                 className={clsx(
-                  "rounded-md px-2 py-2.5 transition-all hover:bg-zinc-50 hover:text-cyan-500 dark:hover:bg-slate-900/70",
+                  "rounded-md px-2 py-2.5 text-start transition-all hover:bg-zinc-50 hover:text-cyan-500 dark:hover:bg-slate-900/70",
                   { "text-zinc-500 dark:text-zinc-300": tag.id !== tagId },
                   { "text-cyan-500": tag.id === tagId },
                 )}
-                onClick={() => setQ("")}
+                onClick={() => handleClickTag(tag.id)}
               >
-                {tag.name}({tag.count})
-              </Link>
+                {tag.name} ({tag.count})
+              </button>
             ))}
           </ul>
         </aside>

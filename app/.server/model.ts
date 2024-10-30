@@ -16,6 +16,9 @@ export interface Meta {
   tag: Tag | null;
 }
 
+// 文章原始元数据
+export type RawMeta = Omit<Meta, "tag"> & { tagId: number | null };
+
 // 首页统计数据
 export interface Statistics {
   articles: number;
