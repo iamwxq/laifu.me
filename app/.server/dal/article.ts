@@ -67,6 +67,7 @@ export async function findArticlesByPage(condition: { page: number }) {
     page,
     pagesize,
     total,
+    totalpage: Math.ceil(total / pagesize),
     data: res.map(({ tagId, ...rest }) => rest),
   };
 
@@ -104,6 +105,7 @@ export async function findArticlesByTagAndPage(condition: { id: number; page: nu
     page,
     pagesize,
     total,
+    totalpage: Math.ceil(total / pagesize),
     data: res.map(({ tagId, ...rest }) => rest),
   };
 
@@ -145,6 +147,7 @@ export async function findArticlesByKeywordAndPage(condition: { q: string; page:
     page,
     pagesize,
     total,
+    totalpage: Math.ceil(total / pagesize),
     data: res.map(({ tagId, ...rest }) => rest),
   };
 

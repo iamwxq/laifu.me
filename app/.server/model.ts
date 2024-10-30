@@ -27,6 +27,7 @@ export interface Statistics {
 
 // 分页查询结果
 export interface PRes<T> {
+  totalpage: number;
   total: number;
   page: number;
   pagesize: number;

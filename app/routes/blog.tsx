@@ -1,13 +1,14 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import type { FormEvent } from "react";
 import { json, redirect } from "@remix-run/node";
-import { Form, Link, useLoaderData, useNavigate, useSubmit } from "@remix-run/react";
+import { Form, useLoaderData, useNavigate, useSubmit } from "@remix-run/react";
 import { findArticlesByKeywordAndPage, findArticlesByPage, findArticlesByTagAndPage } from "~/.server/dal/article";
 import { findManyTags } from "~/.server/dal/tag";
 import clsx from "clsx";
 import { CircleX, Search } from "lucide-react";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Article from "~/components/article";
+import Pagination from "~/components/pagination";
 
 function useDebounce(fn: (...args: any[]) => any, delay: number) {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -167,6 +168,12 @@ function Blog() {
           <ul className="mx-auto grid max-w-3xl grid-cols-2 gap-12">
             {articlelist.data?.map(article => <Article key={article.slug} article={article} />)}
           </ul>
+
+          {articlelist.totalpage > 1 && (
+            <Pagination
+              totalpage={articlelist.totalpage}
+            />
+          )}
         </main>
       </div>
     </div>
