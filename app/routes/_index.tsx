@@ -2,7 +2,7 @@ import { json } from "@remix-run/node";
 import { NavLink, useLoaderData } from "@remix-run/react";
 import { findManyArticles, findStatistics } from "~/.server/dal/post";
 import avatar from "~/assets/images/avatar.jpg";
-import Article from "~/components/post";
+import Post from "~/components/post";
 import { fNumber } from "~/utils";
 
 export async function loader() {
@@ -30,7 +30,7 @@ function Index() {
 
       <main className="grid grid-cols-9 pt-20 text-black dark:text-white">
         <ul className="col-span-7 grid grid-cols-2 gap-8">
-          {articles.map(article => <Article key={article.slug} article={article} />)}
+          {articles.map(post => <Post key={post.slug} post={post} />)}
         </ul>
 
         <aside className="sticky top-[57px] col-span-2 self-start">
