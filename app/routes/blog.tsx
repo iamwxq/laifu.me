@@ -68,16 +68,27 @@ export async function loader({ request }: LoaderFunctionArgs) {
     articlelist = await findArticlesByPage({ page });
   }
 
+  // 守卫
+  if (page > articlelist.totalpage) {
+    return redirect(`/blog?p=1${t === null ? "" : `&t=${t}`}${q === null ? "" : `&q=${q}`}`);
+  }
+
   return json({ tagId: id, q, p, articlelist, taglist });
 }
 
 function Blog() {
   const submit = useSubmit();
   const navigate = useNavigate();
-  const { tagId, q, articlelist, taglist } = useLoaderData<typeof loader>();
-  // const [page, setPage] = useState(1);
+  const {
+    q,
+    tagId,
+    taglist,
+    articlelist,
+  } = useLoaderData<typeof loader>();
+
+  const ref = useRef<HTMLInputElement>(null);
+
   const [keyword, setKeyword] = useState(q || "");
-  const qRef = useRef<HTMLInputElement>(null);
 
   // 提交防抖
   const debouncedSubmit = useDebounce((e: EventTarget & HTMLFormElement) => submit(e, { replace: true }), 300);
@@ -105,7 +116,7 @@ function Blog() {
   }
 
   useEffect(() => {
-    const input = qRef.current;
+    const input = ref.current;
     if (!input)
       return;
 
@@ -125,7 +136,7 @@ function Blog() {
           >
             <input hidden defaultValue="1" name="p" />
             <input
-              ref={qRef}
+              ref={ref}
               aria-label="搜索文章"
               className="h-7 w-full text-zinc-900 outline-none transition-all dark:bg-zinc-800 dark:text-zinc-100"
               defaultValue={keyword || ""}

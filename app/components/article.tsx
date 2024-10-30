@@ -16,7 +16,7 @@ function Article({ article }: Props) {
       <h2 className="cursor-pointer text-xl font-semibold hover:underline">{article.title}</h2>
       <p className="text-zinc-600 dark:text-zinc-200">{article.brief}</p>
       <div className="flex items-center gap-3 text-sm text-zinc-400">
-        <div>{fDatetime(article.datetime)}</div>
+        <div className="select-none">{fDatetime(article.datetime)}</div>
         {article.tag && <Tag tag={article.tag} />}
       </div>
     </article>
