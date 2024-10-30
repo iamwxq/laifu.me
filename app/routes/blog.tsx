@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import type { FormEvent } from "react";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Form, Link, useLoaderData, useNavigate, useSubmit } from "@remix-run/react";
 import { findArticlesByKeywordAndPage, findArticlesByPage, findArticlesByTagAndPage } from "~/.server/dal/article";
 import { findManyTags } from "~/.server/dal/tag";
@@ -29,21 +29,43 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const q = url.searchParams.get("q");
 
   let articlelist;
-  let page = Number(p);
   const id = Number(t);
-  page = Number.isNaN(page) ? 1 : page;
+  const page = Number(p);
+
+  // 四个参数守卫
+  if (page < 1 || Number.isNaN(page)) {
+    // 这个 redierct 有可能会流转到下一个守卫并再次 redierct
+    // 比如 /blog?p=-1&t=&q=web
+    // 保证 p 的合法性
+    return redirect(`/blog?p=1${t === null ? "" : `&t=${t}`}${q === null ? "" : `&q=${q}`}`);
+  }
+  if (t !== null && q !== null) {
+    // t 和 q 同时存在时 仅保留 q
+    return redirect(`/blog?p=${page}&q=${q}`);
+  }
+  if (q === "") {
+    // 仅为了路由的整洁性
+    return redirect(`/blog?p=${page}`);
+  }
+  if (t !== null && (id < 1 || Number.isNaN(id))) {
+    // 仅为了路由的整洁性
+    return redirect(`/blog?p=${page}`);
+  }
 
   // 获取标签列表
   const taglist = await findManyTags();
 
   // 获取文章结果列表
   if (q) {
+    // 关键词模糊搜索
     articlelist = await findArticlesByKeywordAndPage({ page, q });
   }
   else if (id > 0) { // tag id 不小于 1
+    // 标签筛选
     articlelist = await findArticlesByTagAndPage({ page, id });
   }
   else {
+    // 无条件查询
     articlelist = await findArticlesByPage({ page });
   }
 

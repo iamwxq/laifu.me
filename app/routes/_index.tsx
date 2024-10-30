@@ -20,7 +20,7 @@ function Index() {
       <div className="mt-8 py-28 transition-all">
         <b className="mx-auto block max-h-screen max-w-2xl font-normal text-black dark:text-white">
           <h1 className="py-10 text-2xl font-semibold tracking-widest">
-            Life finally meets treasure.
+            Life finally meets pleasure.
           </h1>
           <p className="py-2 text-center text-xl tracking-widest">
             或许吧...
