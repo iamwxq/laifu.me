@@ -51,5 +51,10 @@
   // For tailwindcss & clsx
   "tailwindCSS.experimental.classRegex": [
     ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^\"'`]*)(?:'|\"|`)"]
-  ]
+  ],
+
+  "[prisma]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "Prisma.prisma"
+  }
 }

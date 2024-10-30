@@ -1,13 +1,13 @@
 import { json } from "@remix-run/node";
 import { NavLink, useLoaderData } from "@remix-run/react";
-import { getFakeArticleList, getFakeStatistics } from "~/.server/data";
-import { Tag } from "lucide-react";
+import { findManyArticles, findStatistics } from "~/.server/dal/article";
 import avatar from "~/assets/images/avatar.jpg";
+import Article from "~/components/article";
 import { fNumber } from "~/utils";
 
 export async function loader() {
-  const articles = await getFakeArticleList();
-  const statistics = await getFakeStatistics();
+  const articles = await findManyArticles();
+  const statistics = await findStatistics();
 
   return json({ articles, statistics });
 }
@@ -28,27 +28,9 @@ function Index() {
         </b>
       </div>
 
-      <main className="grid grid-cols-9 px-4 pt-20 text-black dark:text-white">
+      <main className="grid grid-cols-9 pt-20 text-black dark:text-white">
         <ul className="col-span-7 grid grid-cols-2 gap-8">
-          {articles.map(article => (
-            <article
-              key={article.slug}
-              className="box-border flex flex-col gap-2 p-2 leading-relaxed"
-            >
-              <h2 className="cursor-pointer text-xl font-semibold hover:underline">{article.title}</h2>
-              <p className="text-zinc-600 dark:text-zinc-200">{article.brief}</p>
-              <div className="flex items-center gap-3 text-sm text-zinc-400">
-                <div>{article.datetime}</div>
-                <NavLink
-                  className="flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-0.5 transition-all hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
-                  to={`/blog?p=1&t=${article.tag.name}`}
-                >
-                  <Tag className="size-[14px] rotate-90" />
-                  <span>{article.tag.name}</span>
-                </NavLink>
-              </div>
-            </article>
-          ))}
+          {articles.map(article => <Article key={article.slug} article={article} />)}
         </ul>
 
         <aside className="sticky top-[57px] col-span-2 self-start">

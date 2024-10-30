@@ -2,10 +2,12 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import type { FormEvent } from "react";
 import { json } from "@remix-run/node";
 import { Form, Link, useLoaderData, useNavigate, useSubmit } from "@remix-run/react";
-import { getFakeTagList } from "~/.server/data";
+import { findArticlesByKeywordAndPage, findArticlesByPage, findArticlesByTagAndPage } from "~/.server/dal/article";
+import { findManyTags } from "~/.server/dal/tag";
 import clsx from "clsx";
 import { CircleX, Search } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import Article from "~/components/article";
 
 function useDebounce(fn: (...args: any[]) => any, delay: number) {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -21,25 +23,41 @@ function useDebounce(fn: (...args: any[]) => any, delay: number) {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  // search params
   const url = new URL(request.url);
   const t = url.searchParams.get("t");
-  const search = url.searchParams.get("q");
   const p = url.searchParams.get("p");
+  const q = url.searchParams.get("q");
 
-  // data
-  const taglist = await getFakeTagList();
+  let articlelist;
+  let page = Number(p);
+  const id = Number(t);
+  page = Number.isNaN(page) ? 1 : page;
 
-  return json({ t, search, taglist, p });
+  // 获取标签列表
+  const taglist = await findManyTags();
+
+  // 获取文章结果列表
+  if (q) {
+    articlelist = await findArticlesByKeywordAndPage({ page, q });
+  }
+  else if (id > 0) { // tag id 不小于 1
+    articlelist = await findArticlesByTagAndPage({ page, id });
+  }
+  else {
+    articlelist = await findArticlesByPage({ page });
+  }
+
+  return json({ t, q, p, articlelist, taglist });
 }
 
 function Blog() {
   const submit = useSubmit();
   const navigate = useNavigate();
-  const { search, taglist } = useLoaderData<typeof loader>();
+  const { t, q: _q, articlelist, taglist } = useLoaderData<typeof loader>();
   // const [page, setPage] = useState(1);
-  const [q, setQ] = useState(search || "");
+  const [q, setQ] = useState(_q || "");
   const qRef = useRef<HTMLInputElement>(null);
+  const tagId = Number(t);
 
   // 提交防抖
   const debouncedSubmit = useDebounce((e: EventTarget & HTMLFormElement) => submit(e, { replace: true }), 300);
@@ -61,8 +79,8 @@ function Blog() {
     if (!input)
       return;
 
-    input.value = search || "";
-  }, [search]);
+    input.value = _q || "";
+  }, [_q]);
 
   return (
     <div>
@@ -96,20 +114,31 @@ function Blog() {
         </div>
       </div>
 
-      <div className="flex">
-        <ul className="flex flex-col ">
-          {taglist.map(tag => (
-            <Link
-              key={tag.id}
-              className="text-zinc-500 dark:text-zinc-300"
-              to={`/blog?p=1&t=${tag.name}`}
-            >
-              {tag.name}({tag.count})
-            </Link>
-          ))}
-        </ul>
+      <div className="grid grid-cols-6">
+        <aside className="sticky top-[57px] col-span-1 mx-auto max-w-lg self-start pt-6">
+          <ul className="flex flex-col">
+            {taglist.map(tag => (
+              <Link
+                key={tag.id}
+                to={`/blog?p=1&t=${tag.id}`}
+                className={clsx(
+                  "rounded-md px-2 py-2.5 transition-all hover:bg-zinc-50 hover:text-cyan-500 dark:hover:bg-slate-900/70",
+                  { "text-zinc-500 dark:text-zinc-300": tag.id !== tagId },
+                  { "text-cyan-500": tag.id === tagId },
+                )}
+                onClick={() => setQ("")}
+              >
+                {tag.name}({tag.count})
+              </Link>
+            ))}
+          </ul>
+        </aside>
 
-        <ul></ul>
+        <main className="col-span-5">
+          <ul className="mx-auto grid max-w-3xl grid-cols-2 gap-12">
+            {articlelist.data?.map(article => <Article key={article.slug} article={article} />)}
+          </ul>
+        </main>
       </div>
     </div>
   );

@@ -50,7 +50,7 @@ export function App() {
         <div className="relative min-h-screen bg-white dark:bg-black">
           <Header />
 
-          <div className="mx-auto flex min-h-[calc(100vh-57px)] max-w-7xl flex-col">
+          <div className="mx-auto flex min-h-[calc(100vh-57px)] max-w-7xl flex-col px-6">
             <Outlet />
             <Footer />
           </div>
