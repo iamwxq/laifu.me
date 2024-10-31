@@ -2,7 +2,7 @@ import type { PostMeta, PRes, Statistics } from "~/.server/model";
 import { db } from "~/.server/db";
 
 // 首页文章列表
-export async function findManyArticles() {
+export async function findAllPosts() {
   try {
     const res: Array<PostMeta> = await db.article.findMany({
       take: 14,
@@ -39,7 +39,7 @@ export async function findStatistics() {
 }
 
 // 文章页分页查询
-export async function findArticlesByPage(condition: { page: number }) {
+export async function findPostsByPage(condition: { page: number }) {
   const pagesize = 10;
   const { page } = condition;
 
@@ -75,7 +75,7 @@ export async function findArticlesByPage(condition: { page: number }) {
 }
 
 // 文章页按标签分页查询
-export async function findArticlesByTagAndPage(condition: { id: number; page: number }) {
+export async function findPostsByTagAndPage(condition: { id: number; page: number }) {
   const pagesize = 10;
   const { id, page } = condition;
 
@@ -113,7 +113,7 @@ export async function findArticlesByTagAndPage(condition: { id: number; page: nu
 }
 
 // 文章页按关键字查询
-export async function findArticlesByKeywordAndPage(condition: { q: string; page: number }) {
+export async function findPostsByKeywordAndPage(condition: { q: string; page: number }) {
   const pagesize = 10;
   const { page, q } = condition;
 
@@ -150,6 +150,25 @@ export async function findArticlesByKeywordAndPage(condition: { q: string; page:
     totalpage: Math.ceil(total / pagesize),
     data: res.map(({ tagId, ...rest }) => rest),
   };
+
+  return data;
+}
+
+// 根据 slug 查询文章
+export async function findPostBySlug(sl: string) {
+  const post = await db.article.findUnique({
+    where: {
+      slug: sl,
+    },
+    include: {
+      tag: true,
+    },
+  });
+
+  if (!post)
+    return;
+
+  const { tagId, ...data } = post;
 
   return data;
 }

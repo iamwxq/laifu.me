@@ -1,0 +1,80 @@
+---
+hello: frontmatter
+---
+
+> A comprehensive guide for JavaScript beginners
+>
+> 我们会在下面的介绍中学习 JavaScript 的基础知识
+
+## Introduction
+
+JavaScript continues to dominate the web development landscape in 2024. As one of the most popular programming languages, it powers everything from simple websites to complex web applications. This guide will help beginners take their first steps into the JavaScript ecosystem.
+
+## 开发环境设置
+
+作为一门编程语言，JavaScript 的学习曲线相对平缓。你只需要一个浏览器和文本编辑器就可以开始编写代码。在2024年，主流浏览器如Chrome、Firefox、Safari都内置了强大的开发者工具，这让调试 JavaScript 代码变得更加容易。
+
+## Basic Syntax and Data Types
+
+The first step in learning JavaScript is understanding its basic syntax and data types. JavaScript has six primitive data types: string, number, boolean, undefined, null, and symbol. Objects are reference types that can store collections of data. Variables can be declared using `let`, `const`, or `var` keywords, though `var` is now considered legacy syntax.
+
+## 代码示例
+
+简单的单行代码块儿 `console.log("Hello, World!");`，长这个样子。
+
+让我们通过一个简单的例子来展示 JavaScript 的基本语法和 ES6+ 特性：
+
+```rust
+fn greeting() {
+    println!("Hello, World!");
+}
+```
+
+```javascript
+// 定义一个类来表示待办事项
+class TodoItem {
+  constructor(title, completed = false) {
+    this.title = title;
+    this.completed = completed;
+    this.createdAt = new Date();
+  }
+
+  toggleStatus() {
+    this.completed = !this.completed;
+  }
+}
+
+// 使用数组方法和箭头函数管理待办事项列表
+const todoList = {
+  items: [],
+
+  addItem(title) {
+    this.items.push(new TodoItem(title));
+  },
+
+  getIncomplete() {
+    return this.items.filter(item => !item.completed);
+  },
+
+  getSummary() {
+    const total = this.items.length;
+    const completed = this.items.filter(item => item.completed).length;
+    return `完成进度: ${completed}/${total}`;
+  }
+};
+
+// 使用新特性操作数据
+todoList.addItem("学习JavaScript基础");
+todoList.addItem("练习编写代码");
+todoList.addItem("阅读技术文档");
+
+// 完成第一个任务
+todoList.items[0].toggleStatus();
+
+// 解构赋值获取未完成的任务
+const [...incompleteTasks] = todoList.getIncomplete();
+console.log("未完成的任务:", incompleteTasks.map(item => item.title));
+console.log(todoList.getSummary());
+```
+
+至此我们的介绍就结束了，感谢阅读。

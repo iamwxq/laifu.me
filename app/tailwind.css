@@ -2,13 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
-}
-
-.dark,
-:root[class~="dark"] {
-}
-
 @layer base {
   input[type="search"]::-webkit-search-cancel-button {
     -webkit-appearance: none;
@@ -16,8 +9,6 @@ html, body {
   }
 }
 
-@layer components {
-}
+@layer components {}
 
-@layer utilities {
-}
+@layer utilities {}

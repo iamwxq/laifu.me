@@ -1,5 +1,10 @@
+import type { RehypeShikiOptions } from "@shikijs/rehype";
 import mdx from "@mdx-js/rollup";
 import { vitePlugin as remix } from "@remix-run/dev";
+import rehypeShiki from "@shikijs/rehype";
+import rehypeSlug from "rehype-slug";
+import remarkFrontmatter from "remark-frontmatter";
+import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
@@ -11,7 +16,21 @@ declare module "@remix-run/node" {
 
 export default defineConfig({
   plugins: [
-    mdx({}),
+    mdx({
+      remarkPlugins: [
+        remarkFrontmatter,
+        remarkMdxFrontmatter,
+      ],
+      rehypePlugins: [
+        rehypeSlug,
+        [rehypeShiki, {
+          themes: {
+            light: "catppuccin-latte",
+            dark: "catppuccin-mocha",
+          },
+        } satisfies RehypeShikiOptions],
+      ],
+    }),
     remix({
       future: {
         v3_fetcherPersist: true,

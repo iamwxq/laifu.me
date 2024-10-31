@@ -17,7 +17,6 @@
     "prisma:migrate": "prisma migrate dev --name init"
   },
   "dependencies": {
-    "@mdx-js/rollup": "^3.1.0",
     "@prisma/client": "5.21.1",
     "@remix-run/node": "^2.13.1",
     "@remix-run/react": "^2.13.1",
@@ -28,13 +27,18 @@
     "lucide-react": "^0.454.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "remark-frontmatter": "^5.0.0",
+    "remark-mdx-frontmatter": "^5.0.0",
     "remix-themes": "^1.5.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.8.0",
     "@eslint-react/eslint-plugin": "^1.15.2",
     "@eslint/eslintrc": "^3.1.0",
+    "@mdx-js/mdx": "^3.1.0",
+    "@mdx-js/rollup": "^3.1.0",
     "@remix-run/dev": "^2.13.1",
+    "@shikijs/rehype": "^1.22.2",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
@@ -44,6 +48,7 @@
     "eslint-plugin-tailwindcss": "^3.17.5",
     "postcss": "^8.4.47",
     "prisma": "^5.21.1",
+    "rehype-slug": "^6.0.0",
     "tailwindcss": "^3.4.14",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3",

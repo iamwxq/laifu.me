@@ -2,7 +2,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import type { FormEvent } from "react";
 import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData, useNavigate, useSubmit } from "@remix-run/react";
-import { findArticlesByKeywordAndPage, findArticlesByPage, findArticlesByTagAndPage } from "~/.server/dal/post";
+import { findPostsByKeywordAndPage, findPostsByPage, findPostsByTagAndPage } from "~/.server/dal/post";
 import { findManyTags } from "~/.server/dal/tag";
 import clsx from "clsx";
 import { CircleX, Search } from "lucide-react";
@@ -57,15 +57,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
   // 获取文章结果列表
   if (q) {
     // 关键词模糊搜索
-    postlist = await findArticlesByKeywordAndPage({ page, q });
+    postlist = await findPostsByKeywordAndPage({ page, q });
   }
   else if (id > 0) { // tag id 不小于 1
     // 标签筛选
-    postlist = await findArticlesByTagAndPage({ page, id });
+    postlist = await findPostsByTagAndPage({ page, id });
   }
   else {
     // 无条件查询
-    postlist = await findArticlesByPage({ page });
+    postlist = await findPostsByPage({ page });
   }
 
   // 守卫
@@ -138,7 +138,7 @@ function Index() {
             <input
               ref={ref}
               aria-label="搜索文章"
-              className="h-7 w-full text-zinc-900 outline-none transition-all dark:bg-zinc-800 dark:text-zinc-100"
+              className="h-7 w-full bg-white text-zinc-900 outline-none transition-all dark:bg-zinc-800 dark:text-zinc-100"
               defaultValue={keyword || ""}
               name="q"
               placeholder="搜索文章"

@@ -45,7 +45,8 @@
     "less",
     "scss",
     "pcss",
-    "postcss"
+    "postcss",
+    "mdx"
   ],
 
   // For tailwindcss & clsx
@@ -53,11 +54,22 @@
     ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^\"'`]*)(?:'|\"|`)"]
   ],
 
+  "css.validate": true,
+  "css.lint.unknownAtRules": "ignore",
+  "css.format.maxPreserveNewLines": 1,
+  "css.format.newlineBetweenRules": true,
+  "css.format.newlineBetweenSelectors": true,
+  "[css]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "vscode.css-language-features"
+  },
+
   "[prisma]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "Prisma.prisma"
   },
 
+  "mdx.server.enable": true,
   "[mdx]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "unifiedjs.vscode-mdx"

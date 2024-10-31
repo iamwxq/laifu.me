@@ -215,7 +215,7 @@ export async function findManyArticleWithTag() {
   }
 }
 
-// findManyArticleWithTag();
+findManyArticleWithTag();
 
 export async function deleteArticle() {
   await prisma.article.delete({
@@ -250,4 +250,4 @@ export async function updateTagCount() {
   await prisma.$disconnect();
 }
 
-updateTagCount();
+// updateTagCount();

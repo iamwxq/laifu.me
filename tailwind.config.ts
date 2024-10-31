@@ -17,6 +17,17 @@ export default {
           "\"Segoe UI Symbol\"",
           "\"Noto Color Emoji\"",
         ],
+        code: [
+          "\"Fira Code\"",
+          "\"Noto Sans SC\"",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+          "\"Apple Color Emoji\"",
+          "\"Segoe UI Emoji\"",
+          "\"Segoe UI Symbol\"",
+          "\"Noto Color Emoji\"",
+        ],
       },
       screens: {
         "3xl": "1920px",

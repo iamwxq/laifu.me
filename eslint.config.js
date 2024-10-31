@@ -15,11 +15,13 @@ export default antfu(
     rules: {
       "style/quotes": ["error", "double"],
     },
+    markdown: true,
   },
   // react
   {
     rules: {
       "react/prop-types": "off",
+      "react-hooks/exhaustive-deps": "off",
       "react-refresh/only-export-components": "off",
       "style/jsx-one-expression-per-line": "off",
       "style/jsx-sort-props": [
@@ -43,4 +45,7 @@ export default antfu(
       "tailwindcss/no-custom-classname": "off",
     },
   }),
+  // ...compat.config({
+  //   extends: ["plugin:mdx/recommended"],
+  // }),
 );
