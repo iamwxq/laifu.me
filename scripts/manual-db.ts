@@ -188,7 +188,7 @@ export async function main() {
   // await findAllPosts();
   // await findAllTags();
   // await updateTagsCount();
-  await findTagById(9);
+  await findTagById(1);
   await findPostBySlug("movie-analysis-techniques");
 }
 
