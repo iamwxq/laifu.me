@@ -34,7 +34,7 @@ function Me({ statistics, sticky = true }: Props) {
               className="hover:underline"
               to="/blog?p=1"
             >
-              {fNumber(statistics?.articles)}
+              {fNumber(statistics?.posts)}
             </NavLink>
             <span className="select-none">文章</span>
           </div>

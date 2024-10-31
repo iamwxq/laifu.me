@@ -1,20 +1,16 @@
 import type { RawPostMeta } from "~/.server/model";
 import { db } from "~/.server/db";
 
-export async function findAchivedArticles() {
-  try {
-    const res: Array<RawPostMeta> = await db.article.findMany({
-      where: {
-        archived: true,
-      },
-      orderBy: {
-        datetime: "desc",
-      },
-    });
+export async function findAchivedPosts(): Promise<Array<RawPostMeta>> {
+  const res: Array<RawPostMeta> = await db.post.findMany({
+    where: {
+      archived: true,
+    },
+    orderBy: [
+      { createdAt: "desc" },
+      { updatedAt: "desc" },
+    ],
+  });
 
-    return res;
-  }
-  catch {
-    throw new Error("find archived article list failed");
-  }
+  return res;
 }

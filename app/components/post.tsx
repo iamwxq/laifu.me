@@ -15,7 +15,7 @@ function Post({ post }: Props) {
     >
       <Link
         className="cursor-pointer text-xl font-semibold hover:underline"
-        to="/blog/getting-started-with-javascript"
+        to={`/blog/${post.slug}`}
       >
         {post.title}
       </Link>
@@ -26,7 +26,7 @@ function Post({ post }: Props) {
 
       <div className="flex items-center gap-3 text-sm text-zinc-400">
         <div className="select-none">
-          {fDatetime(post.datetime)}
+          {fDatetime(post.createdAt)}
         </div>
 
         {post.tag && <Tag tag={post.tag} />}

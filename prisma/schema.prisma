@@ -10,20 +10,25 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Article {
-  slug     String   @id
-  title    String
-  brief    String   @default("")
-  datetime DateTime @default(now())
-  archived Boolean  @default(false)
-  words    Int      @default(0)
-  tag      Tag?     @relation(fields: [tagId], references: [id])
-  tagId    Int?
+model Post {
+  slug      String   @id
+  title     String   @unique
+  words     Int      @default(0)
+  brief     String   @default("")
+  archived  Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("create_at")
+  updatedAt DateTime @default(now()) @map("update_at")
+  tag       Tag      @relation(fields: [tagId], references: [id])
+  tagId     Int      @map("tag_id")
+
+  @@map("tbl_post")
 }
 
 model Tag {
-  id      Int       @id @default(autoincrement())
-  name    String    @unique
-  count   Int       @default(0)
-  Article Article[]
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  count Int    @default(0)
+  Post  Post[]
+
+  @@map("tbl_tag")
 }

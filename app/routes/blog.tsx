@@ -2,7 +2,7 @@ import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { json, Link, Outlet, useLoaderData, useLocation, useNavigate } from "@remix-run/react";
 import { findPostBySlug, findStatistics } from "~/.server/dal/post";
 import { Dot } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Me from "~/components/me";
 import Tag from "~/components/tag";
 import styles from "~/styles/post.css?url";
@@ -19,7 +19,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const slash = url.pathname.lastIndexOf("/");
   const slug = url.pathname.slice(slash + 1);
-  const postmeta = await findPostBySlug(slug);
+  const postmeta = await findPostBySlug({ slug });
   const statistics = await findStatistics();
 
   return json({ postmeta, statistics });
@@ -28,8 +28,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 function Blog() {
   const navigate = useNavigate();
   const { hash, pathname } = useLocation();
-  const [headings, setHeadings] = useState<Array<{ tc: string;id: string }>>([]);
   const { postmeta, statistics } = useLoaderData<typeof loader>();
+  const [headings, setHeadings] = useState<Array<{ tc: string;id: string }>>([]);
 
   function handleClickAnchor(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id: string) {
     e.preventDefault();
@@ -70,7 +70,7 @@ function Blog() {
             <div>
               <abbr className="flex flex-col text-zinc-600 dark:text-zinc-300">
                 <div className="flex select-none items-center text-sm">
-                  <time>{fDatetime(postmeta.datetime)}</time>
+                  <time>{fDatetime(postmeta.updatedAt)}</time>
                   <Dot className="size-5" />
                   <span>{fNumber(postmeta.words)} 字数</span>
                   {postmeta.tag && (
@@ -86,20 +86,22 @@ function Blog() {
               <hr className="my-12 border-zinc-200 dark:border-zinc-700" />
             </div>
           )}
+
           <div className="content">
             <Outlet />
           </div>
           <hr className="my-12 border-zinc-200 dark:border-zinc-700" />
         </div>
       </div>
+
       <div className="col-span-2 mx-auto pt-8">
         <Me statistics={statistics} sticky={false} />
         <ul className="sticky top-[57px] mt-20 flex flex-col gap-1 pt-3">
-          <div className="mb-4 text-center text-lg dark:text-zinc-100">大纲</div>
+          <div className="mb-4 text-center text-lg text-zinc-700 dark:text-zinc-100">大纲</div>
           {headings.map(h => (
             <Link
               key={h.id}
-              className="self-end rounded-md px-1.5 py-0.5 transition-all dark:text-zinc-200 dark:hover:bg-zinc-600"
+              className="self-end rounded-md px-1.5 py-0.5 text-right text-zinc-500 transition-all hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-600"
               to={h.id}
               onClick={e => handleClickAnchor(e, h.id)}
             >

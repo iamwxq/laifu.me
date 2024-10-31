@@ -32,7 +32,7 @@ function Index() {
           {articles.map(post => <Post key={post.slug} post={post} />)}
         </ul>
 
-        <Me statistics={statistics} />
+        <Me sticky statistics={statistics} />
       </main>
     </div>
   );
