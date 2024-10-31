@@ -1,72 +1,71 @@
 import type { PostMeta, PRes, Statistics } from "~/.server/model";
 import { db } from "~/.server/db";
 
-// 首页文章列表
-export async function findAllPosts() {
-  try {
-    const res: Array<PostMeta> = await db.article.findMany({
-      take: 14,
-      where: { archived: false },
-      include: { tag: true },
-      orderBy: { datetime: "desc" },
-    });
+const pagesize = 10;
 
-    return res;
-  }
-  catch {
-    throw new Error("find article list failed");
-  }
-}
-
-// 首页统计数据
-export async function findStatistics() {
-  try {
-    const res = await db.article.aggregate({
-      _count: { _all: true },
-      _sum: { words: true },
-    });
-
-    const data: Statistics = {
-      articles: res._count._all,
-      words: res._sum.words || 0,
-    };
-
-    return data;
-  }
-  catch {
-    throw new Error("statistics: aggregate `count` and `sum` failed");
-  }
-}
-
-// 文章页分页查询
-export async function findPostsByPage(condition: { page: number }) {
-  const pagesize = 10;
-  const { page } = condition;
-
-  const total = await db.article.count({
-    where: {
-      archived: false,
-    },
+/**
+ *  获取首页文章列表
+ */
+export async function findAllPosts(): Promise<Array<PostMeta>> {
+  const res = await db.post.findMany({
+    orderBy: [
+      { createdAt: "desc" },
+      { updatedAt: "desc" },
+    ],
+    take: 14,
+    include: { tag: true },
+    where: { archived: false },
   });
 
-  const res = await db.article.findMany({
-    skip: (page - 1) * pagesize,
+  const data: Array<PostMeta> = res.map(({ tagId, ...rest }) => rest);
+
+  return data;
+}
+
+/**
+ *  获取个人统计数据
+ */
+export async function findStatistics(): Promise<Statistics> {
+  const res = await db.post.aggregate({
+    _sum: { words: true },
+    _count: { _all: true },
+  });
+
+  const data: Statistics = {
+    posts: res._count._all,
+    words: res._sum.words || 0,
+  };
+
+  return data;
+}
+
+/**
+ *  文章页分页查询
+ */
+export async function findPostsByPage(
+  condition: {
+    page: number;
+  },
+): Promise<PRes<PostMeta>> {
+  const total = await db.post.count({
+    where: { archived: false },
+  });
+
+  const res = await db.post.findMany({
+    orderBy: [
+      { createdAt: "desc" },
+      { updatedAt: "desc" },
+    ],
     take: pagesize,
-    where: {
-      archived: false,
-    },
-    include: {
-      tag: true,
-    },
-    orderBy: {
-      datetime: "desc",
-    },
+    include: { tag: true },
+    where: { archived: false },
+    skip: (condition.page - 1) * pagesize,
   });
 
   const data: PRes<PostMeta> = {
-    page,
-    pagesize,
     total,
+    pagesize,
+    page: condition.page,
     totalpage: Math.ceil(total / pagesize),
     data: res.map(({ tagId, ...rest }) => rest),
   };
@@ -74,37 +73,40 @@ export async function findPostsByPage(condition: { page: number }) {
   return data;
 }
 
-// 文章页按标签分页查询
-export async function findPostsByTagAndPage(condition: { id: number; page: number }) {
-  const pagesize = 10;
-  const { id, page } = condition;
-
-  const total = await db.article.count({
+/**
+ *  文章页按标签分页查询
+ */
+export async function findPostsByTagAndPage(
+  condition: {
+    id: number;
+    page: number;
+  },
+): Promise<PRes<PostMeta>> {
+  const total = await db.post.count({
     where: {
-      tagId: id,
       archived: false,
+      tagId: condition.id,
     },
   });
 
-  const res = await db.article.findMany({
-    skip: (page - 1) * pagesize,
-    take: pagesize,
+  const res = await db.post.findMany({
     where: {
-      tagId: id,
       archived: false,
+      tagId: condition.id,
     },
-    include: {
-      tag: true,
-    },
-    orderBy: {
-      datetime: "desc",
-    },
+    orderBy: [
+      { createdAt: "desc" },
+      { updatedAt: "desc" },
+    ],
+    take: pagesize,
+    include: { tag: true },
+    skip: (condition.page - 1) * pagesize,
   });
 
   const data: PRes<PostMeta> = {
-    page,
-    pagesize,
     total,
+    pagesize,
+    page: condition.page,
     totalpage: Math.ceil(total / pagesize),
     data: res.map(({ tagId, ...rest }) => rest),
   };
@@ -112,41 +114,44 @@ export async function findPostsByTagAndPage(condition: { id: number; page: numbe
   return data;
 }
 
-// 文章页按关键字查询
-export async function findPostsByKeywordAndPage(condition: { q: string; page: number }) {
-  const pagesize = 10;
-  const { page, q } = condition;
-
-  const total = await db.article.count({
+/**
+ *  文章页按关键字查询
+ */
+export async function findPostsByKeywordAndPage(
+  condition: {
+    q: string;
+    page: number;
+  },
+): Promise<PRes<PostMeta>> {
+  const total = await db.post.count({
     where: {
       OR: [
-        { title: { contains: q } },
-        { brief: { contains: q } },
+        { title: { contains: condition.q } },
+        { brief: { contains: condition.q } },
       ],
     },
   });
 
-  const res = await db.article.findMany({
-    skip: (page - 1) * pagesize,
-    take: pagesize,
+  const res = await db.post.findMany({
     where: {
       OR: [
-        { title: { contains: q } },
-        { brief: { contains: q } },
+        { title: { contains: condition.q } },
+        { brief: { contains: condition.q } },
       ],
     },
-    include: {
-      tag: true,
-    },
-    orderBy: {
-      datetime: "desc",
-    },
+    orderBy: [
+      { createdAt: "desc" },
+      { updatedAt: "desc" },
+    ],
+    take: pagesize,
+    include: { tag: true },
+    skip: (condition.page - 1) * pagesize,
   });
 
   const data: PRes<PostMeta> = {
-    page,
-    pagesize,
     total,
+    pagesize,
+    page: condition.page,
     totalpage: Math.ceil(total / pagesize),
     data: res.map(({ tagId, ...rest }) => rest),
   };
@@ -154,21 +159,29 @@ export async function findPostsByKeywordAndPage(condition: { q: string; page: nu
   return data;
 }
 
-// 根据 slug 查询文章
-export async function findPostBySlug(sl: string) {
-  const post = await db.article.findUnique({
-    where: {
-      slug: sl,
-    },
-    include: {
-      tag: true,
-    },
+/**
+ *  根据 slug 查询文章
+ */
+export async function findPostBySlug(
+  condition: {
+    slug: string;
+  },
+): Promise<PostMeta | undefined > {
+  const post = await db.post.findUnique({
+    include: { tag: true },
+    where: { slug: condition.slug },
   });
 
-  if (!post)
-    return;
-
-  const { tagId, ...data } = post;
-
-  return data;
+  return post
+    ? {
+      tag: post.tag,
+      slug: post.slug,
+      brief: post.brief,
+      title: post.title,
+      words: post.words,
+      archived: post.archived,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+    } satisfies PostMeta
+    : undefined;
 }

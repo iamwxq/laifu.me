@@ -7,21 +7,22 @@ export interface Tag {
 
 // 文章元数据
 export interface PostMeta {
+  tag: Tag;
   slug: string;
   title: string;
   brief: string;
   words: number;
-  datetime: Date;
+  createdAt: Date;
+  updatedAt: Date;
   archived: boolean;
-  tag: Tag | null;
 }
 
 // 文章原始元数据
-export type RawPostMeta = Omit<PostMeta, "tag"> & { tagId: number | null };
+export type RawPostMeta = Omit<PostMeta, "tag"> & { tagId: number };
 
 // 首页统计数据
 export interface Statistics {
-  articles: number;
+  posts: number;
   words: number;
 }
 
