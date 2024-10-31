@@ -130,7 +130,7 @@ export async function main() {
             updatedAt: new Date(updatedata.updatedAt),
           },
         });
-        console.log("updated post from db:", dbupdatedpost);
+        console.log("Updated post from db:", dbupdatedpost);
         // 更新文件中的贴文元数据
         const { tagId: _abort, ...updatedpost } = dbupdatedpost;
         const updatedmeta: PostMeta = {
@@ -139,9 +139,10 @@ export async function main() {
           updatedAt: dayjs(updatedpost.updatedAt).format("YYYY-MM-DD HH:mm"),
           createdAt: dayjs(updatedpost.createdAt).format("YYYY-MM-DD HH:mm"),
         };
-        console.log("updated meta to file:", updatedmeta);
+        console.log("Updated meta to file:", updatedmeta);
         const strmdx = matter.stringify(content, updatedmeta);
         fs.writeFileSync(path.join(__blogpath, blog, "route.mdx"), strmdx);
+        console.log(`Updated blog [${blog}] successfully`);
       }
       // 贴文不存在 创建贴文
       else if (!post) {
@@ -174,7 +175,7 @@ export async function main() {
         }
         // 不需要更新文件中的贴文元数据
         // 在数据库中创建该贴文的贴文元数据
-        await db.post.create({
+        const dbcreatedpost = await db.post.create({
           data: {
             ...updatedata,
             tagId,
@@ -183,6 +184,12 @@ export async function main() {
             createdAt: new Date(updatedata.updatedAt), // 第一次创建时 创建时间和更新时间相同
           },
         });
+        console.log("Updated post from db:", dbcreatedpost);
+        console.log(`Created blog [${blog}] successfully`);
+      }
+      // 不需要更新贴文
+      else {
+        console.log(`Haha, no need to update database and posts [${blog}]`);
       }
     }
   }
