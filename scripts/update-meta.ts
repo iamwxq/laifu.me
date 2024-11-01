@@ -58,7 +58,10 @@ export function generateMeta(name: string): {
   const words = regexparr ? regexparr.length : 0;
 
   meta.words = words;
-  if (meta.updatedAt !== updatedAt) {
+  // 这个地方不能直接比较精确值
+  // 可能存在 1 分钟之间的误差
+  const diff = dayjs(updatedAt).diff(dayjs(meta.updatedAt));
+  if (diff >= 1_000 || meta.updatedAt !== updatedAt) {
     shouldupdate = true;
     meta.updatedAt = updatedAt;
   }
@@ -173,7 +176,6 @@ export async function main() {
           });
           tagId = tag.id;
         }
-        // 不需要更新文件中的贴文元数据
         // 在数据库中创建该贴文的贴文元数据
         const dbcreatedpost = await db.post.create({
           data: {
@@ -184,6 +186,17 @@ export async function main() {
             createdAt: new Date(updatedata.updatedAt), // 第一次创建时 创建时间和更新时间相同
           },
         });
+        // 更新文件中的贴文元数据
+        const { tagId: _abort, ...createdpost } = dbcreatedpost;
+        const createdmeta: PostMeta = {
+          ...createdpost,
+          tag: tagname,
+          updatedAt: dayjs(createdpost.updatedAt).format("YYYY-MM-DD HH:mm"),
+          createdAt: dayjs(createdpost.createdAt).format("YYYY-MM-DD HH:mm"),
+        };
+
+        const strmdx = matter.stringify(content, createdmeta);
+        fs.writeFileSync(path.join(__blogpath, blog, "route.mdx"), strmdx);
         console.log("Updated post from db:", dbcreatedpost);
         console.log(`Created blog [${blog}] successfully`);
       }
@@ -191,6 +204,8 @@ export async function main() {
       else {
         console.log(`Haha, no need to update database and posts [${blog}]`);
       }
+
+      console.log(`============== [${blog}] ==============\n`);
     }
   }
   catch (error) {

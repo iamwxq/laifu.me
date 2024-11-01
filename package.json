@@ -13,6 +13,7 @@
     "lint:fix": "eslint . --fix",
     "start": "remix-serve ./build/server/index.js",
     "typecheck": "tsc",
+    "db:manual": "tsx scripts/manual-db.ts",
     "db:update": "tsx scripts/update-meta.ts",
     "db:migrate": "prisma migrate dev --name init"
   },
