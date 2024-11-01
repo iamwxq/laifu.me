@@ -69,7 +69,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   // 守卫
-  if (page > postlist.totalpage) {
+  if (postlist.totalpage > 0 && page > postlist.totalpage) {
     return redirect(`/blog?p=${postlist.totalpage}${t === null ? "" : `&t=${t}`}${q === null ? "" : `&q=${q}`}`);
   }
 
