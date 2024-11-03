@@ -1,18 +1,11 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
-import type { Theme } from "remix-themes";
-import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData, useRouteError } from "@remix-run/react";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react";
 import { themeSessionResolver } from "~/.server/session";
 import clsx from "clsx";
 import { PreventFlashOnWrongTheme, ThemeProvider, useTheme } from "remix-themes";
-import ErrorUnauthorized from "~/components/401";
 import Footer from "~/layouts/footer";
 import Header from "~/layouts/header";
 import styles from "~/tailwind.css?url";
-
-interface ErrorBoundaryData {
-  theme: string;
-  message: string;
-}
 
 export const links: LinksFunction = () => [
   {
@@ -38,35 +31,6 @@ export const links: LinksFunction = () => [
 export async function loader({ request }: LoaderFunctionArgs) {
   const { getTheme } = await themeSessionResolver(request);
   return { theme: getTheme() };
-}
-
-export function ErrorBoundary() {
-  const error = useRouteError();
-
-  if (isRouteErrorResponse(error)) {
-    const status = error.status;
-    const data = error.data as ErrorBoundaryData;
-
-    return (
-      <html className={clsx(data.theme)}>
-        <head>
-          <title>Oh! unauthorized</title>
-          <Meta />
-          <Links />
-        </head>
-
-        <body>
-          <div className="relative min-h-screen bg-white selection:bg-zinc-200 dark:bg-black dark:selection:bg-zinc-700">
-            <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-6">
-              {status === 401 && <ErrorUnauthorized />}
-            </div>
-          </div>
-        </body>
-      </html>
-    );
-  }
-
-  return <div>500</div>;
 }
 
 export function App() {

@@ -1,11 +1,12 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { json, Link, Outlet, redirect, useLoaderData, useLocation, useNavigate } from "@remix-run/react";
+import { isRouteErrorResponse, json, Link, Outlet, useLoaderData, useLocation, useNavigate, useRouteError } from "@remix-run/react";
 import { findAllSlugs, findPostBySlug, findStatistics } from "~/.server/dal/post";
-import { themeSessionResolver } from "~/.server/session";
 import { Dot } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Me from "~/components/me";
 import Tag from "~/components/tag";
+import ErrorInternalSystem from "~/errors/internal-system";
+import ErrorUnauthorized from "~/errors/unauthorized";
 import styles from "~/styles/post.css?url";
 import { fDatetime, fNumber } from "~/utils";
 
@@ -20,18 +21,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const slash = url.pathname.lastIndexOf("/");
 
-  // 把主题色也传递给 ErrorBoundary
-  const resolver = await themeSessionResolver(request);
-  const theme = resolver.getTheme();
-
   const slug = url.pathname.slice(slash + 1);
   const slugs = await findAllSlugs();
   if (!slugs.includes(slug)) {
     throw json(
-      {
-        theme,
-        message: "no permission to access this post",
-      },
+      { message: "no permission to access this post" },
       {
         status: 401,
         statusText: "no permission",
@@ -46,6 +40,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const statistics = await findStatistics();
 
   return json({ postmeta, statistics });
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error)) {
+    const status = error.status;
+
+    if (status === 401) {
+      return <ErrorUnauthorized />;
+    }
+  }
+
+  return <ErrorInternalSystem />;
 }
 
 function Blog() {
