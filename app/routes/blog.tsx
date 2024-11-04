@@ -1,8 +1,7 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { isRouteErrorResponse, json, Link, Outlet, useLoaderData, useLocation, useNavigate, useRouteError } from "@remix-run/react";
 import { findAllSlugs, findPostBySlug, findStatistics } from "~/.server/dal/post";
-import clsx from "clsx";
-import { ArrowBigLeft, ArrowBigUp, Dot } from "lucide-react";
+import { ArrowLeft, ArrowUp, Dot } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import CircleButton from "~/components/circle-button";
 import Me from "~/components/me";
@@ -161,14 +160,14 @@ function Blog() {
           ))}
           <div className="bottom-10 flex flex-col gap-3 self-end pt-8">
             <CircleButton behavior={() => navigate(-1)}>
-              <ArrowBigLeft />
+              <ArrowLeft />
             </CircleButton>
 
             <CircleButton
               behavior={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               visible={show}
             >
-              <ArrowBigUp />
+              <ArrowUp />
             </CircleButton>
           </div>
         </ul>
