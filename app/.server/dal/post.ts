@@ -185,3 +185,14 @@ export async function findPostBySlug(
     } satisfies PostMeta
     : undefined;
 }
+
+/**
+ *  获取所有的 slugs
+ */
+export async function findAllSlugs(): Promise<Array<string>> {
+  const slugs = await db.post.findMany({
+    select: { slug: true },
+  });
+
+  return slugs.map(item => item.slug);
+}

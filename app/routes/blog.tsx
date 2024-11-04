@@ -1,11 +1,13 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { json, Link, Outlet, useLoaderData, useLocation, useNavigate } from "@remix-run/react";
-import { findPostBySlug, findStatistics } from "~/.server/dal/post";
+import { isRouteErrorResponse, json, Link, Outlet, useLoaderData, useLocation, useNavigate, useRouteError } from "@remix-run/react";
+import { findAllSlugs, findPostBySlug, findStatistics } from "~/.server/dal/post";
 import { Dot } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Me from "~/components/me";
 import Tag from "~/components/tag";
+import ErrorUnauthorized from "~/errors/unauthorized";
 import styles from "~/styles/post.css?url";
+import { ErrorCode } from "~/types";
 import { fDatetime, fNumber } from "~/utils";
 
 export const links: LinksFunction = () => [
@@ -18,11 +20,40 @@ export const links: LinksFunction = () => [
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const slash = url.pathname.lastIndexOf("/");
+
   const slug = url.pathname.slice(slash + 1);
+  const slugs = await findAllSlugs();
+  if (!slugs.includes(slug)) {
+    throw json(
+      { message: "no permission to access this post" },
+      {
+        status: ErrorCode.Unauthorized,
+        statusText: "no permission",
+      },
+    );
+  }
+
   const postmeta = await findPostBySlug({ slug });
   const statistics = await findStatistics();
 
   return json({ postmeta, statistics });
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error) && error.status === ErrorCode.Unauthorized) {
+    return <ErrorUnauthorized />;
+  }
+
+  throw json(
+    {
+      message: "other type errors",
+    },
+    {
+      status: ErrorCode.InternalSystem,
+    },
+  );
 }
 
 function Blog() {
