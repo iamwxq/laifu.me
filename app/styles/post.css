@@ -20,7 +20,7 @@
 }
 
 .content p {
-  @apply dark:text-zinc-100 text-zinc-800 mb-5 tracking-wide leading-relaxed text-[16px];
+  @apply dark:text-zinc-100 text-zinc-800 mb-5 tracking-wide leading-9 text-[16px];
 }
 
 /**************************** 引用块 *****************************/

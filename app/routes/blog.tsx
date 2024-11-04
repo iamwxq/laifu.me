@@ -1,6 +1,7 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { isRouteErrorResponse, json, Link, Outlet, useLoaderData, useLocation, useNavigate, useRouteError } from "@remix-run/react";
 import { findAllSlugs, findPostBySlug, findStatistics } from "~/.server/dal/post";
+import clsx from "clsx";
 import { ArrowLeft, ArrowUp, Dot } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import CircleButton from "~/components/circle-button";
@@ -8,6 +9,7 @@ import Me from "~/components/me";
 import Tag from "~/components/tag";
 import ErrorUnauthorized from "~/errors/unauthorized";
 import styles from "~/styles/post.css?url";
+import type { Heading, HeadingLevel, HeadingName } from "~/types";
 import { ErrorCode } from "~/types";
 import { fDatetime, fNumber } from "~/utils";
 
@@ -62,7 +64,7 @@ function Blog() {
   const { hash, pathname } = useLocation();
   const [show, setShow] = useState<boolean>(false);
   const { postmeta, statistics } = useLoaderData<typeof loader>();
-  const [headings, setHeadings] = useState<Array<{ tc: string;id: string }>>([]);
+  const [headings, setHeadings] = useState<Array<Heading>>([]);
 
   function handleClickAnchor(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id: string) {
     e.preventDefault();
@@ -77,7 +79,21 @@ function Blog() {
   useEffect(() => {
     const temp: typeof headings = [];
     const nodes = document.querySelectorAll(".content [id]");
-    nodes.forEach(heading => temp.push({ tc: heading.textContent || "", id: `#${heading.id}` }));
+    const matchlvl = (tn: HeadingName): HeadingLevel => {
+      switch (tn) {
+        case "H1":return 1;
+        case "H2":return 2;
+        case "H3":return 3;
+        case "H4":return 4;
+        case "H5":return 5;
+        default: return 1;
+      }
+    };
+    nodes.forEach(heading => temp.push({
+      tc: heading.textContent || "",
+      id: `#${heading.id}`,
+      lvl: matchlvl(heading.tagName as HeadingName),
+    }));
     setHeadings(temp);
 
     if (!hash.startsWith("#"))
@@ -146,19 +162,29 @@ function Blog() {
 
       <div className="col-span-2 pt-8">
         <Me statistics={statistics} sticky={false} />
-        <ul className="sticky top-[57px] mt-20 flex flex-col gap-1 pt-3">
+        <ul className="sticky top-[57px] mt-20 flex flex-col gap-0 pt-3">
           {headings.length > 0 && <div className="mb-4 text-center text-lg text-zinc-700 dark:text-zinc-100">大纲</div>}
-          {headings.map(h => (
-            <Link
+          {headings.map((h, i) => (
+            <div
               key={h.id}
-              className="self-end rounded-md px-1.5 py-0.5 text-right text-zinc-500 transition-all hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-600"
-              to={h.id}
-              onClick={e => handleClickAnchor(e, h.id)}
+              className={clsx(
+                "text-start",
+                h.lvl === 2 && i !== 0 && "mt-2",
+                h.lvl === 3 && "ml-4",
+                h.lvl === 4 && "ml-8",
+                h.lvl === 5 && "ml-12",
+              )}
             >
-              {h.tc}
-            </Link>
+              <Link
+                className="rounded-md px-1.5 py-0.5 text-right text-zinc-500 transition-all hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-600"
+                to={h.id}
+                onClick={e => handleClickAnchor(e, h.id)}
+              >
+                {h.tc}
+              </Link>
+            </div>
           ))}
-          <div className="bottom-10 flex flex-col gap-3 self-end pt-8">
+          <div className="bottom-10 mr-8 flex flex-col gap-3 self-end pt-8">
             <CircleButton behavior={() => navigate(-1)}>
               <ArrowLeft />
             </CircleButton>
