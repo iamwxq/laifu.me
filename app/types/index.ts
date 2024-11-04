@@ -12,3 +12,9 @@ export interface Heading {
   id: string;
   lvl: HeadingLevel;
 }
+
+export interface ListItem {
+  check?: boolean;
+  content: string;
+  children?: Array<ListItem>;
+}

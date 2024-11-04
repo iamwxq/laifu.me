@@ -148,6 +148,9 @@ function Blog() {
                 </div>
                 <h1 className="mb-8 pt-6 text-4xl font-semibold text-black dark:text-white">{postmeta.title}</h1>
                 <p className="text-lg text-zinc-700 dark:text-zinc-200">{postmeta.brief}</p>
+                <div className="mt-5 select-none text-end text-sm italic text-zinc-400 dark:text-zinc-500">
+                  最近一次更新：{fDatetime(postmeta.updatedAt)}
+                </div>
               </abbr>
               <hr className="my-12 border-zinc-200 dark:border-zinc-700" />
             </div>
