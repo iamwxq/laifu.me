@@ -1,8 +1,12 @@
+import { TriangleAlert } from "lucide-react";
+import ErrorWrapper from "~/components/error-wrapper";
+
 function ErrorInternalSystem() {
   return (
-    <div className="text-black dark:text-white">
-      404
-    </div>
+    <ErrorWrapper
+      description="系统出错啦"
+      icon={<TriangleAlert className="size-16" />}
+    />
   );
 };
 
