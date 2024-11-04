@@ -57,6 +57,7 @@ export function ErrorBoundary() {
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <Meta />
         <Links />
+        <title>Laifu | 来福</title>
       </head>
       <body>
         <div className="relative min-h-screen bg-white selection:bg-zinc-200 dark:bg-black dark:selection:bg-zinc-700">
@@ -87,6 +88,7 @@ export function App() {
         <Meta />
         <Links />
         <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
+        <title>Laifu | 来福</title>
       </head>
 
       <body>
