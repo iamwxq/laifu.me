@@ -5,9 +5,9 @@ import { Dot } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Me from "~/components/me";
 import Tag from "~/components/tag";
-import ErrorInternalSystem from "~/errors/internal-system";
 import ErrorUnauthorized from "~/errors/unauthorized";
 import styles from "~/styles/post.css?url";
+import { ErrorCode } from "~/types";
 import { fDatetime, fNumber } from "~/utils";
 
 export const links: LinksFunction = () => [
@@ -27,11 +27,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     throw json(
       { message: "no permission to access this post" },
       {
-        status: 401,
+        status: ErrorCode.Unauthorized,
         statusText: "no permission",
-        headers: {
-          "Cache-Control": "no-store",
-        },
       },
     );
   }
@@ -45,15 +42,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export function ErrorBoundary() {
   const error = useRouteError();
 
-  if (isRouteErrorResponse(error)) {
-    const status = error.status;
-
-    if (status === 401) {
-      return <ErrorUnauthorized />;
-    }
+  if (isRouteErrorResponse(error) && error.status === ErrorCode.Unauthorized) {
+    return <ErrorUnauthorized />;
   }
 
-  return <ErrorInternalSystem />;
+  throw json(
+    {
+      message: "other type errors",
+    },
+    {
+      status: ErrorCode.InternalSystem,
+    },
+  );
 }
 
 function Blog() {
