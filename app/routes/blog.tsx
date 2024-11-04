@@ -1,8 +1,10 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { isRouteErrorResponse, json, Link, Outlet, useLoaderData, useLocation, useNavigate, useRouteError } from "@remix-run/react";
 import { findAllSlugs, findPostBySlug, findStatistics } from "~/.server/dal/post";
-import { Dot } from "lucide-react";
+import clsx from "clsx";
+import { ArrowBigLeft, ArrowBigUp, Dot } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import CircleButton from "~/components/circle-button";
 import Me from "~/components/me";
 import Tag from "~/components/tag";
 import ErrorUnauthorized from "~/errors/unauthorized";
@@ -59,6 +61,7 @@ export function ErrorBoundary() {
 function Blog() {
   const navigate = useNavigate();
   const { hash, pathname } = useLocation();
+  const [show, setShow] = useState<boolean>(false);
   const { postmeta, statistics } = useLoaderData<typeof loader>();
   const [headings, setHeadings] = useState<Array<{ tc: string;id: string }>>([]);
 
@@ -93,8 +96,25 @@ function Blog() {
     }
   }, []);
 
+  useEffect(() => {
+    const toggle = () => {
+      const y = window.scrollY;
+      if (y > 32) {
+        setShow(true);
+      }
+      else {
+        setShow(false);
+      }
+    };
+
+    toggle();
+
+    window.addEventListener("scroll", toggle);
+    return () => window.removeEventListener("scroll", toggle);
+  }, []);
+
   return (
-    <div className="max-auto grid max-w-7xl grid-cols-10 gap-8">
+    <div className="grid max-w-7xl grid-cols-10 gap-8">
       <div className="col-span-8 py-8">
         <div className="mx-auto max-w-3xl">
           {postmeta && (
@@ -125,10 +145,10 @@ function Blog() {
         </div>
       </div>
 
-      <div className="col-span-2 mx-auto pt-8">
+      <div className="col-span-2 pt-8">
         <Me statistics={statistics} sticky={false} />
         <ul className="sticky top-[57px] mt-20 flex flex-col gap-1 pt-3">
-          <div className="mb-4 text-center text-lg text-zinc-700 dark:text-zinc-100">大纲</div>
+          {headings.length > 0 && <div className="mb-4 text-center text-lg text-zinc-700 dark:text-zinc-100">大纲</div>}
           {headings.map(h => (
             <Link
               key={h.id}
@@ -139,6 +159,18 @@ function Blog() {
               {h.tc}
             </Link>
           ))}
+          <div className="bottom-10 flex flex-col gap-3 self-end pt-8">
+            <CircleButton behavior={() => navigate(-1)}>
+              <ArrowBigLeft />
+            </CircleButton>
+
+            <CircleButton
+              behavior={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              visible={show}
+            >
+              <ArrowBigUp />
+            </CircleButton>
+          </div>
         </ul>
       </div>
     </div>

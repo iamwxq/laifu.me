@@ -49,7 +49,7 @@ function Me({ statistics, sticky = true }: Props) {
       </div>
 
       <NavLink
-        className="absolute bottom-0 right-9 flex items-center text-zinc-400 transition-all duration-300 hover:text-zinc-700 hover:underline dark:hover:text-zinc-100"
+        className="absolute bottom-0 right-10 flex items-center text-zinc-400 transition-all duration-300 hover:text-zinc-700 hover:underline dark:hover:text-zinc-100"
         to="/about"
       >
         <span className="text-sm">关于我 &rarr;</span>
