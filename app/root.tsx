@@ -1,11 +1,24 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react";
+import {
+  isRouteErrorResponse,
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useLoaderData,
+  useRouteError,
+  useRouteLoaderData,
+} from "@remix-run/react";
 import { themeSessionResolver } from "~/.server/session";
 import clsx from "clsx";
 import { PreventFlashOnWrongTheme, ThemeProvider, useTheme } from "remix-themes";
+import ErrorInternalSystem from "~/errors/internal-system";
+import ErrorNotFound from "~/errors/not-found";
 import Footer from "~/layouts/footer";
 import Header from "~/layouts/header";
 import styles from "~/tailwind.css?url";
+import { ErrorCode } from "~/types";
 
 export const links: LinksFunction = () => [
   {
@@ -33,9 +46,38 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return { theme: getTheme() };
 }
 
+export function ErrorBoundary() {
+  const error = useRouteError();
+  const rootdata = useRouteLoaderData<typeof loader>("root");
+
+  return (
+    <html className={clsx(rootdata?.theme)} lang="zh-Hans">
+      <head>
+        <meta charSet="utf-8" />
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <div className="relative min-h-screen bg-white selection:bg-zinc-200 dark:bg-black dark:selection:bg-zinc-700">
+          <div className="h-[57px]"></div>
+
+          <div className="mx-auto flex min-h-[calc(100vh-57px)] max-w-7xl flex-col px-6">
+            {isRouteErrorResponse(error) && error.status === ErrorCode.NotFound && <ErrorNotFound />}
+            {!isRouteErrorResponse(error) && <ErrorInternalSystem />}
+            <Footer />
+          </div>
+        </div>
+
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+
 export function App() {
+  const theme = useTheme()[0];
   const data = useLoaderData<typeof loader>();
-  const [theme] = useTheme();
 
   return (
     <html className={clsx(theme)} lang="zh-Hans">
@@ -64,7 +106,7 @@ export function App() {
   );
 }
 
-export default function AppWithProvider() {
+function AppWithProvider() {
   const data = useLoaderData<typeof loader>();
 
   return (
@@ -76,3 +118,5 @@ export default function AppWithProvider() {
     </ThemeProvider>
   );
 }
+
+export default AppWithProvider;
