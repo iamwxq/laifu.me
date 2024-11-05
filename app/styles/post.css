@@ -136,3 +136,8 @@ html.dark .shiki span {
 .dark .content ol li input[type="checkbox"]:checked::after {
   @apply text-zinc-200;
 }
+
+/**************************** 插图 *****************************/
+.content figure {
+  margin: 20px 0;
+}
