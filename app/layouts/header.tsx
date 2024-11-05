@@ -5,18 +5,15 @@ import { Theme, useTheme } from "remix-themes";
 
 function Header() {
   const location = useLocation();
-  const [mode, setMode] = useTheme();
-
-  const show = mode === Theme.DARK;
+  const [theme, setTheme] = useTheme();
 
   function handleSwitchMode() {
-    switch (mode) {
+    switch (theme) {
       case Theme.DARK:
-        setMode(Theme.LIGHT);
-        break;
+        setTheme(Theme.LIGHT);
+        return;
       case Theme.LIGHT:
-        setMode(Theme.DARK);
-        break;
+        setTheme(Theme.DARK);
     }
   }
 
@@ -89,7 +86,7 @@ function Header() {
             className={clsx(
               "size-5 cursor-pointer select-none text-zinc-200 transition-all",
               "group-hover:text-zinc-50",
-              { hidden: !show },
+              theme === Theme.LIGHT && "hidden",
             )}
           />
 
@@ -97,7 +94,7 @@ function Header() {
             className={clsx(
               "size-5 cursor-pointer select-none text-zinc-500 transition-all",
               "group-hover:text-zinc-800",
-              { hidden: show },
+              theme === Theme.DARK && "hidden",
             )}
           />
         </button>
