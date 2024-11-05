@@ -131,6 +131,8 @@ function Index() {
 
           <Form
             className="flex-1"
+            id="search-form"
+            name="search-form"
             role="search"
             onChange={e => handleInput(e)}
           >

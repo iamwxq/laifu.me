@@ -9,7 +9,7 @@ import Me from "~/components/me";
 import Tag from "~/components/tag";
 import ErrorUnauthorized from "~/errors/unauthorized";
 import styles from "~/styles/post.css?url";
-import type { Heading, HeadingLevel, HeadingName } from "~/types";
+import type { Heading, HeadingName } from "~/types";
 import { ErrorCode } from "~/types";
 import { fDatetime, fNumber } from "~/utils";
 
@@ -79,21 +79,16 @@ function Blog() {
   useEffect(() => {
     const temp: typeof headings = [];
     const nodes = document.querySelectorAll(".content [id]");
-    const matchlvl = (tn: HeadingName): HeadingLevel => {
-      switch (tn) {
-        case "H1":return 1;
-        case "H2":return 2;
-        case "H3":return 3;
-        case "H4":return 4;
-        case "H5":return 5;
-        default: return 1;
+    const ish = (t: string): t is HeadingName => /^H[1-6]$/.test(t);
+    nodes.forEach((heading) => {
+      if (ish(heading.tagName)) {
+        temp.push({
+          id: `#${heading.id}`,
+          lvl: heading.tagName,
+          tc: heading.textContent || "",
+        });
       }
-    };
-    nodes.forEach(heading => temp.push({
-      tc: heading.textContent || "",
-      id: `#${heading.id}`,
-      lvl: matchlvl(heading.tagName as HeadingName),
-    }));
+    });
     setHeadings(temp);
 
     if (!hash.startsWith("#"))
@@ -172,10 +167,11 @@ function Blog() {
               key={h.id}
               className={clsx(
                 "text-start",
-                h.lvl === 2 && i !== 0 && "mt-2",
-                h.lvl === 3 && "ml-4",
-                h.lvl === 4 && "ml-8",
-                h.lvl === 5 && "ml-12",
+                h.lvl === "H2" && i !== 0 && "mt-2",
+                h.lvl === "H3" && "ml-4",
+                h.lvl === "H4" && "ml-8",
+                h.lvl === "H5" && "ml-12",
+                h.lvl === "H6" && "ml-14",
               )}
             >
               <Link
