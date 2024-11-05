@@ -4,6 +4,7 @@ import { vitePlugin as remix } from "@remix-run/dev";
 import rehypeShiki from "@shikijs/rehype";
 import rehypeSlug from "rehype-slug";
 import remarkFrontmatter from "remark-frontmatter";
+import remarkGfm from "remark-gfm";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
@@ -18,6 +19,7 @@ export default defineConfig({
   plugins: [
     mdx({
       remarkPlugins: [
+        remarkGfm,
         remarkFrontmatter,
         remarkMdxFrontmatter,
       ],

@@ -9,16 +9,68 @@ updatedAt: '2024-11-01 19:35'
 tag: 可爱
 ---
 
-```ts
-const greet: string = "hello, world";
-console.log(greet)
-```
+import Del from "@/del"
+import Link from "@/link"
 
-```go
-greet := "hello, world"
-fmt.Println(greet)
-```
 
-```cpp
-std::cout << "hello, world" << std::endl;
-```
+export const data = {
+  github: "https://github.com",
+  list: [
+    {
+      check: false,
+      content: "这是一个清单",
+      children: [
+        {}
+      ]
+    },
+  ]
+}
+
+
+## Autolink literals
+
+<Link to={data.github}/> 这是啥
+
+www.example.com, https://example.com, and contact@example.com.
+
+### Test Indentation
+
+#### Test Indentation
+
+##### Test Indentation
+
+你好，<Del>世界</Del>
+
+## Footnote
+
+A note[^1]
+
+[^1]: Big note.
+
+## Strikethrough
+
+~one~ or ~~two~~ tildes.
+
+## Table
+
+| a | b  |  c |  d  |
+| - | :- | -: | :-: |
+
+## Tasklist2
+
+- <div>to do</div>
+- [ ] to do
+- [x] <div>资产负债表衰退是日本学者辜朝明在20世纪90年代研究日本资产泡沫破灭而引发的经济衰退时提出的。有三个特征非常明显，即资产缩水、债务收缩和经济衰退。其中，资产负债表是最为关键）最小化所形成的债务收缩则是最为重要的作用机制。<Link to="abc">abc</Link></div>
+
+1. [x] <div>资产负债表衰退是日本学者辜朝明在20世纪90年代研究日本资产泡沫破灭而引发的经济衰退时提出的。有三个特征非常明显，即资产缩水、债务收缩和经济衰退。其中，资产负债表是最为关键）最小化所形成的债务收缩则是最为重要的作用机制。<Link to="abc">abc</Link></div>
+2. [x] second
+
+资产负债表衰退是日本学者辜朝明在20世纪90年代研究日本资产泡沫破灭而引发的经济衰退时提出的。有三个特征非常明显，即资产缩水、债务收缩和经济衰退。其中，资产负债表是最为关键的传导渠道，而由利润最大化转向负债（或成本）最小化所形成的债务收缩则是最为重要的作用机制。
+
+居民部门64%的杠杆率是饱受争议的，因为美国当前居民杠杆率是73.1%，2008金融危机前是96.1%，考虑到中国特色分配政策（可支配收入/人均GDP比例不到8成），居民部门的杠杆率上涨空间有限，信贷有可能进入存量博弈，以房地产为代表的债务型增长模式走向末路，中国必须想办法找到新的增长点，那就是新质生产力，靠R&D（Research and Development）拉动内生性增长的全要素生产率TFP，当然现在还多了一个中国特色的平台经济下的生产要素——数据要素。
+
+另一方面，家庭资产端财富高度集中于房地产，56.5%家庭除了住房等实物资产之外，基本无任何净金融资产。由于库存过多且消化过慢，房地产着陆不可避免，一系列房地产政策（放开限购、降LPR利率、降首套利率、商转公、一线城市户籍制度放宽等等）只能“托底”，让房价下降速度减缓，至于宏观原因怕是众人皆知。
+
+换句话说，宏观杠杆率并未下跌，而上涨潜力有限，中国必须进行产业转型，去挑战全球化的分工、贸易秩序。因为内卷的终点就是通缩，而产能却又不能出清，这就是为何中国人民不得不忍受转型期带来的需求冲击阵痛。
+
+The first step in learning JavaScript is understanding its basic syntax and data types. JavaScript has six primitive data types: string, number, boolean, undefined, null, and symbol. Objects are reference types that can store collections of data. Variables can be declared using `let`, `const`, or `var` keywords, though `var` is now considered legacy syntax.
