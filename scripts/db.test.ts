@@ -198,13 +198,22 @@ export async function restorePostBySlug(slug: string) {
   console.log(post);
 }
 
+export async function hardDeletePostBySlug(slug: string) {
+  const post = await db.post.delete({
+    where: { slug },
+  });
+  console.log(post);
+}
+
 export async function main() {
   // await insertTags();
   // await insertPosts();
   // await deletePostBySlug("test-permission");
   // await restorePostBySlug("test-permission");
+  // await hardDeletePostBySlug("test-permission");
+  // await hardDeletePostBySlug("hello-world");
   await findAllPosts();
-  await findAllTags();
+  // await findAllTags();
   // await updateTagsCount();
   // await findTagById(1);
   // await findPostBySlug("movie-analysis-techniques");
