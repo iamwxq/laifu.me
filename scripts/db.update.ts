@@ -1,35 +1,10 @@
+import type { PostMeta, Queue, QueueItem } from "./types";
 import path from "node:path";
 import { PrismaClient } from "@prisma/client";
 import dayjs from "dayjs";
 import matter from "gray-matter";
+import { DBConsts } from "./types";
 import { hash, readdir, readfile, writefile } from "./utils";
-
-interface PostMeta {
-  tag: string;
-  slug: string;
-  title: string;
-  brief: string;
-  words: number;
-  archived: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface QueueItem {
-  meta: PostMeta;
-  content: string;
-  filename: string;
-}
-
-interface Queue {
-  updates: QueueItem[];
-  creates: QueueItem[];
-}
-
-enum DBConsts {
-  TAG_NOT_EXIST = -9999,
-  TAG_NOT_CHANGED = -8888,
-}
 
 const db = new PrismaClient();
 const __dirname = import.meta.dirname;
@@ -43,12 +18,20 @@ async function taskqueue(dirs: string[]): Promise<Queue> {
     const filename = path.join(__blogpath, dir, "route.mdx");
     const f = readfile(filename);
     const mtr = matter(f);
+
     const data = mtr.data as PostMeta;
+    if (data.deletedAt) {
+      continue;
+    }
+
     const slug = data.slug;
     const h = hash(JSON.stringify(data), mtr.content);
 
     const post = await db.post.findUnique({
-      where: { slug },
+      where: {
+        slug,
+        deletedAt: null,
+      },
     });
 
     const item: QueueItem = {

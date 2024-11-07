@@ -1,13 +1,14 @@
+import type { PostMeta } from "./types";
+import path from "node:path";
 import process from "node:process";
 import { PrismaClient } from "@prisma/client";
+import matter from "gray-matter";
+import { Errors } from "./types";
+import { readfile, writefile } from "./utils";
 
 const db = new PrismaClient();
-
-enum Errors {
-  NO_SLUG = "必须通过 '-s <SLUG>'、'--slug <SLUG>'、'-s=<SLUG>' 或 '--slug=<SLUG>' 传入文章的 slug 参数",
-  TO_MANY_SLUG = "'-s <SLUG>'、'--slug <SLUG>'、'-s=<SLUG>' 或 '--slug=<SLUG>' 只能传入其中一种格式",
-  SLUG_NOT_EXIST = "SLUG 不存在，请检查",
-}
+const __dirname = import.meta.dirname;
+const __blogpath = path.join(__dirname, "../app/routes");
 
 async function resolveslug(args: string[]): Promise<string> {
   let count = 0;
@@ -72,7 +73,14 @@ async function main() {
         count: { increment: 1 },
       },
     });
-    console.info(`恢复 <${slug.toUpperCase()}> 成功`);
+    const filename = path.join(__blogpath, `blog.${slug}`, "route.mdx");
+    const f = readfile(filename);
+    const mtr = matter(f);
+    const data = mtr.data as PostMeta;
+    data.deletedAt = null;
+    const fstr = matter.stringify(mtr.content, data);
+    writefile({ filename, data: fstr });
+    console.info(`slug: <${slug}> 恢复成功`);
   }
   catch (error: any) {
     console.error(error.message);
