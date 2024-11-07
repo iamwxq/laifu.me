@@ -84,6 +84,11 @@ html.dark .shiki span {
   @apply flex items-start dark:text-zinc-100 text-zinc-800 text-[16px] last:mb-0 mb-2;
 }
 
+.content ul[class="contains-task-list"] li>div,
+.content ol li>div {
+  @apply flex-1;
+}
+
 .content ul[class="contains-task-list"] li::before {
   content: "";
   @apply size-[6px] mr-4 rounded-full bg-zinc-400 flex-shrink-0 mt-[15px];

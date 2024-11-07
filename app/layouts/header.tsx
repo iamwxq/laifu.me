@@ -83,19 +83,13 @@ function Header() {
           onClick={handleSwitchMode}
         >
           <Sun
-            className={clsx(
-              "size-5 cursor-pointer select-none text-zinc-200 transition-all",
-              "group-hover:text-zinc-50",
-              theme === Theme.LIGHT && "hidden",
-            )}
+            className="size-5 cursor-pointer select-none text-zinc-200 transition-all group-hover:text-zinc-50"
+            style={{ display: theme === Theme.LIGHT ? "none" : "block" }}
           />
 
           <Moon
-            className={clsx(
-              "size-5 cursor-pointer select-none text-zinc-500 transition-all",
-              "group-hover:text-zinc-800",
-              theme === Theme.DARK && "hidden",
-            )}
+            className="size-5 cursor-pointer select-none text-zinc-500 transition-all group-hover:text-zinc-800"
+            style={{ display: theme === Theme.DARK ? "none" : "block" }}
           />
         </button>
       </div>
