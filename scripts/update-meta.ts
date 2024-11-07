@@ -1,8 +1,10 @@
+import type { Buffer } from "node:buffer";
 import fs from "node:fs";
 import path from "node:path";
 import { PrismaClient } from "@prisma/client";
 import dayjs from "dayjs";
 import matter from "gray-matter";
+import { hash, readdir, readfile, writefile } from "./utils";
 
 interface PostMeta {
   tag: string;
@@ -15,210 +17,247 @@ interface PostMeta {
   updatedAt: string;
 }
 
+interface QueueItem {
+  meta: PostMeta;
+  content: string;
+  filename: string;
+}
+
+interface Queue {
+  updates: QueueItem[];
+  creates: QueueItem[];
+}
+
+enum DBConsts {
+  TAG_NOT_EXIST = -9999,
+  TAG_NOT_CHANGED = -8888,
+}
+
 const db = new PrismaClient();
 const __dirname = import.meta.dirname;
 const __blogpath = path.join(__dirname, "../app/routes");
 const __excludes: Array<string> = ["blog.tsx", "blog_._index.tsx"];
 
-export function readblogs(): string[] {
-  const items = fs.readdirSync(__blogpath);
-  return items.filter(item => (item.startsWith("blog") && !__excludes.includes(item)));
+async function taskqueue(dirs: string[]): Promise<Queue> {
+  const q: Queue = { creates: [], updates: [] };
+
+  for (const dir of dirs) {
+    const filename = path.join(__blogpath, dir, "route.mdx");
+    const f = readfile(filename);
+    const mtr = matter(f);
+    const data = mtr.data as PostMeta;
+    const slug = data.slug;
+    const h = hash(JSON.stringify(data), mtr.content);
+
+    const post = await db.post.findUnique({
+      where: { slug },
+    });
+
+    const item: QueueItem = {
+      filename,
+      meta: data,
+      content: mtr.content,
+    };
+
+    // create if post not exists
+    if (!post) {
+      q.creates.push(item);
+      continue;
+    }
+
+    // update if post hash changed
+    if (post.hash !== h) {
+      q.updates.push(item);
+    }
+
+    // do nothing if hash doesn't change
+  }
+
+  return q;
 }
 
-export function generateMeta(name: string): {
-  meta: PostMeta;
-  content: string;
-  shouldupdate: boolean;
-} {
-  let shouldupdate: boolean = false;
-  let updatedAt: string = "";
-  const filename = path.join(__blogpath, name, "route.mdx");
-
-  let stats, file;
-  try {
-    stats = fs.statSync(filename);
-    file = fs.readFileSync(filename, "utf-8");
-    updatedAt = dayjs(stats.mtime).format("YYYY-MM-DD HH:mm");
+async function existtag(tagname: string): Promise<number> {
+  const tag = await db.tag.findUnique({
+    where: { name: tagname },
+  });
+  if (tag) {
+    return tag.id;
   }
-  catch (error) {
-    throw new Error(`Can't open file: ${error}`);
-  }
+  return DBConsts.TAG_NOT_EXIST;
+}
 
-  let meta: PostMeta, content;
-  try {
-    const mdx = matter(file);
-    meta = mdx.data as any;
-    content = mdx.content;
-  }
-  catch (error) {
-    throw new Error(`Can't parse mdx while using gray-matter: ${error}`);
-  }
+async function checktag({
+  slug,
+  tagid,
+  tagname,
+}: {
+  slug: string;
+  tagid: number;
+  tagname: string;
+}): Promise<number> {
+  let restag: number = tagid;
+  const post = (await db.post.findUnique({
+    select: { tagId: true },
+    where: { slug },
+  })) as { tagId: number };
 
-  const regexparr = content.match(/[\u4E00-\u9FA5]|\b\w+\b/g);
-  const words = regexparr ? regexparr.length : 0;
-
-  meta.words = words;
-  // 这个地方不能直接比较精确值
-  // 可能存在 1 分钟之间的误差
-  const diff = dayjs(updatedAt).diff(dayjs(meta.updatedAt));
-  if (diff >= 1_000 || meta.updatedAt !== updatedAt) {
-    shouldupdate = true;
-    meta.updatedAt = updatedAt;
+  if (post.tagId === tagid) {
+    return restag;
   }
 
-  return { meta, content, shouldupdate };
+  await db.tag.update({
+    where: { id: post.tagId },
+    data: {
+      count: { decrement: 1 },
+    },
+  });
+  if (tagid !== DBConsts.TAG_NOT_EXIST) {
+    await db.tag.update({
+      where: { id: tagid },
+      data: {
+        count: { increment: 1 },
+      },
+    });
+  }
+  else {
+    const { id } = await db.tag.create({
+      data: {
+        count: 1,
+        name: tagname,
+      },
+    });
+    restag = id;
+  }
+
+  return restag;
 }
 
 export async function main() {
-  try {
-    // 获取贴文列表
-    const blogs = readblogs();
-    for (const blog of blogs) {
-      const { meta, content, shouldupdate } = generateMeta(blog);
-      // 查询贴文
-      const post = await db.post.findUnique({
-        where: { slug: meta.slug },
-      });
-      // 如果贴文已存在 且文件的修改时间发生了变化 更新贴文
-      if (post && shouldupdate) {
-        const { slug, createdAt, tag: tagname, ...updatedata } = meta;
-        // 查询该贴文的标签 检查是否需要更新标签
-        const tag = await db.tag.findUnique({
-          where: { name: tagname },
-        });
+  let dirs = readdir(path.join(__blogpath), { exclude: __excludes });
+  dirs = dirs.filter(dir => dir.startsWith("blog"));
 
-        let tagId;
-        // 如果这个标签不存在 创建这个标签 并把数量设置为 1
-        if (!tag) {
-          const res = await db.tag.create({
-            data: {
-              name: tagname,
-              count: 1,
-            },
-          });
-          tagId = res.id;
-        }
-        // 查询到这个标签存在了 分为两种情况
-        // 1. 这个贴文没有更新标签 用的还是原来的标签
-        // 2. 这个贴文更新了标签 但是用的是数据库中已存在的其它标签
-        else {
-          // 1. tagId 设置为这个原标签的 id
-          if (post.tagId === tag.id) {
-            tagId = post.tagId;
-          }
-          // 2. 新标签数量 +1 旧标签数量 -1
-          else {
-            tagId = tag.id;
-            await db.tag.update({
-              where: { id: post.tagId },
-              data: {
-                count: { decrement: 1 },
-              },
-            });
-            await db.tag.update({
-              where: { id: tag.id },
-              data: {
-                count: { increment: 1 },
-              },
-            });
-          }
-        }
+  const q = await taskqueue(dirs);
+  const regexp = /[\u4E00-\u9FA5]|\b\w+\b/g;
 
-        // 更新数据库中的贴文元数据
-        const dbupdatedpost = await db.post.update({
-          where: { slug },
+  const createresolver = async () => {
+    console.info("\nStart [create] queue:");
+    console.info(q.creates.map(item => item.filename));
+    q.creates.forEach(async (item) => {
+      const et = await existtag(item.meta.tag);
+      let createdtagid: number = et;
+      if (et !== DBConsts.TAG_NOT_EXIST) {
+        await db.tag.update({
+          where: { id: et },
           data: {
-            ...updatedata,
-            tagId,
-            updatedAt: new Date(updatedata.updatedAt),
+            count: { increment: 1 },
           },
         });
-        console.log("Updated post from db:", dbupdatedpost);
-        // 更新文件中的贴文元数据
-        const { tagId: _abort, ...updatedpost } = dbupdatedpost;
-        const updatedmeta: PostMeta = {
-          ...updatedpost,
-          tag: tagname,
-          updatedAt: dayjs(updatedpost.updatedAt).format("YYYY-MM-DD HH:mm"),
-          createdAt: dayjs(updatedpost.createdAt).format("YYYY-MM-DD HH:mm"),
-        };
-        console.log("Updated meta to file:", updatedmeta);
-        const strmdx = matter.stringify(content, updatedmeta);
-        fs.writeFileSync(path.join(__blogpath, blog, "route.mdx"), strmdx);
-        console.log(`Updated blog [${blog}] successfully`);
       }
-      // 贴文不存在 创建贴文
-      else if (!post) {
-        const { createdAt, tag: tagname, ...updatedata } = meta;
-        // 查询该贴文的标签 检查是否需要更新标签
-        const tag = await db.tag.findUnique({
-          where: { name: tagname },
-        });
-
-        let tagId;
-        // 如果这个标签不存在 创建这个标签 并把数量设置为 1
-        if (!tag) {
-          const res = await db.tag.create({
-            data: {
-              name: tagname,
-              count: 1,
-            },
-          });
-          tagId = res.id;
-        }
-        // 查询到这个标签存在了 但是是新贴文 所以把这个标签的数量 +1
-        else {
-          await db.tag.update({
-            where: { id: tag.id },
-            data: {
-              count: { increment: 1 },
-            },
-          });
-          tagId = tag.id;
-        }
-        // 在数据库中创建该贴文的贴文元数据
-        const dbcreatedpost = await db.post.create({
-          data: {
-            ...updatedata,
-            tagId,
-            slug: updatedata.slug,
-            updatedAt: new Date(updatedata.updatedAt),
-            createdAt: new Date(updatedata.updatedAt), // 第一次创建时 创建时间和更新时间相同
-          },
-        });
-        // 更新文件中的贴文元数据
-        const { tagId: _abort, ...createdpost } = dbcreatedpost;
-        const createdmeta: PostMeta = {
-          ...createdpost,
-          tag: tagname,
-          updatedAt: dayjs(createdpost.updatedAt).format("YYYY-MM-DD HH:mm"),
-          createdAt: dayjs(createdpost.createdAt).format("YYYY-MM-DD HH:mm"),
-        };
-
-        const strmdx = matter.stringify(content, createdmeta);
-        fs.writeFileSync(path.join(__blogpath, blog, "route.mdx"), strmdx);
-        console.log("Updated post from db:", dbcreatedpost);
-        console.log(`Created blog [${blog}] successfully`);
-      }
-      // 不需要更新贴文
       else {
-        console.log(`Haha, no need to update database and posts [${blog}]`);
+        const t = await db.tag.create({
+          data: {
+            name: item.meta.tag,
+            count: 1,
+          },
+        });
+        createdtagid = t.id;
       }
+      const now = new Date();
+      const dayjsnow = dayjs(now).format("YYYY-MM-DD HH:mm:ss");
+      const regmatch = item.content.match(regexp);
+      const words = regmatch ? regmatch.length : 0;
+      const {
+        hash: _h,
+        tagId,
+        ...createdpost
+      } = await db.post.create({
+        data: {
+          words,
+          createdAt: now,
+          updatedAt: now,
+          tagId: createdtagid,
+          slug: item.meta.slug,
+          title: item.meta.title,
+          brief: item.meta.brief,
+          archived: item.meta.archived,
+        },
+      });
 
-      console.log(`============== [${blog}] ==============\n`);
-    }
-  }
-  catch (error) {
-    console.error("Something went wrong:", error);
-  }
-  finally {
-    await db.$disconnect();
-  }
-}
+      const fstr = matter.stringify(
+        item.content,
+        {
+          ...createdpost,
+          tag: item.meta.tag,
+          createdAt: dayjsnow,
+          updatedAt: dayjsnow,
+        },
+      );
+      writefile({ filename: item.filename, data: fstr });
+      const rf = readfile(item.filename);
+      const mtr = matter(rf);
+      const h = hash(JSON.stringify(mtr.data), mtr.content);
+      await db.post.update({
+        where: { slug: createdpost.slug },
+        data: { hash: h },
+      });
+      console.info(`slug: <${mtr.data.slug}> success, hash: ${h}`);
+    });
+  };
 
-export async function test() {
-  readblogs();
+  const updateresolver = async () => {
+    console.info("\nStart [update] queue:");
+    console.info(q.updates.map(item => item.filename));
+    q.updates.forEach(async (item) => {
+      const et = await existtag(item.meta.tag);
+      const updatedtagid = await checktag({
+        tagid: et,
+        slug: item.meta.slug,
+        tagname: item.meta.tag,
+      });
+      const now = new Date();
+      const dayjsnow = dayjs(now).format("YYYY-MM-DD HH:mm:ss");
+      const regmatch = item.content.match(regexp);
+      const words = regmatch ? regmatch.length : 0;
+      const {
+        hash: _h,
+        tagId,
+        ...updatedpost
+      } = await db.post.update({
+        where: { slug: item.meta.slug },
+        data: {
+          words,
+          updatedAt: now,
+          tagId: updatedtagid,
+          slug: item.meta.slug,
+          title: item.meta.title,
+          brief: item.meta.brief,
+          archived: item.meta.archived,
+        },
+      });
+
+      const fstr = matter.stringify(
+        item.content,
+        {
+          ...updatedpost,
+          tag: item.meta.tag,
+          updatedAt: dayjsnow,
+          createdAt: item.meta.createdAt,
+        },
+      );
+      writefile({ filename: item.filename, data: fstr });
+      const rf = readfile(item.filename);
+      const mtr = matter(rf);
+      const h = hash(JSON.stringify(mtr.data), mtr.content);
+      await db.post.update({
+        where: { slug: updatedpost.slug },
+        data: { hash: h },
+      });
+      console.info(`slug: <${mtr.data.slug}> success, hash: ${h}`);
+    });
+  };
+
+  await createresolver();
+  await updateresolver();
 }
 
 main();
-// test();

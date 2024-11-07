@@ -192,12 +192,12 @@ export async function deletePostBySlug(slug: string) {
 export async function main() {
   // await insertTags();
   // await insertPosts();
-  // await findAllPosts();
-  // await findAllTags();
+  await findAllPosts();
+  await findAllTags();
   // await updateTagsCount();
   // await findTagById(1);
   // await findPostBySlug("movie-analysis-techniques");
-  await deletePostBySlug("hello-world");
+  // await deletePostBySlug("hello-world");
 }
 
 main();
