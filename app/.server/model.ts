@@ -14,6 +14,7 @@ export interface PostMeta {
   words: number;
   createdAt: Date;
   updatedAt: Date;
+  deletedAt: Date | null;
   archived: boolean;
 }
 

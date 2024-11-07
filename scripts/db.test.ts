@@ -183,8 +183,17 @@ export async function findPostBySlug(slug: string) {
 }
 
 export async function deletePostBySlug(slug: string) {
-  const post = await db.post.delete({
+  const post = await db.post.update({
     where: { slug },
+    data: { deletedAt: new Date() },
+  });
+  console.log(post);
+}
+
+export async function restorePostBySlug(slug: string) {
+  const post = await db.post.update({
+    where: { slug },
+    data: { deletedAt: null },
   });
   console.log(post);
 }
@@ -192,6 +201,8 @@ export async function deletePostBySlug(slug: string) {
 export async function main() {
   // await insertTags();
   // await insertPosts();
+  // await deletePostBySlug("test-permission");
+  // await restorePostBySlug("test-permission");
   await findAllPosts();
   await findAllTags();
   // await updateTagsCount();

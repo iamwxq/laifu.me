@@ -131,7 +131,7 @@ function Blog() {
             <div>
               <abbr className="flex flex-col text-zinc-600 dark:text-zinc-300">
                 <div className="flex select-none items-center text-sm">
-                  <time>{fDatetime(postmeta.updatedAt)}</time>
+                  <time>{fDatetime(postmeta.createdAt)}</time>
                   <Dot className="size-5" />
                   <span>{fNumber(postmeta.words)} 字数</span>
                   {postmeta.tag && (
