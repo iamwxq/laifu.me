@@ -8,13 +8,16 @@ const pagesize = 10;
  */
 export async function findAllPosts(): Promise<Array<PostMeta>> {
   const res = await db.post.findMany({
+    where: {
+      deletedAt: null,
+      archived: false,
+    },
     orderBy: [
       { createdAt: "desc" },
       { updatedAt: "desc" },
     ],
     take: 14,
     include: { tag: true },
-    where: { archived: false },
   });
 
   const data: Array<PostMeta> = res.map(({ tagId, ...rest }) => rest);
@@ -27,6 +30,7 @@ export async function findAllPosts(): Promise<Array<PostMeta>> {
  */
 export async function findStatistics(): Promise<Statistics> {
   const res = await db.post.aggregate({
+    where: { deletedAt: null },
     _sum: { words: true },
     _count: { _all: true },
   });
@@ -48,17 +52,23 @@ export async function findPostsByPage(
   },
 ): Promise<PRes<PostMeta>> {
   const total = await db.post.count({
-    where: { archived: false },
+    where: {
+      deletedAt: null,
+      archived: false,
+    },
   });
 
   const res = await db.post.findMany({
+    where: {
+      deletedAt: null,
+      archived: false,
+    },
     orderBy: [
       { createdAt: "desc" },
       { updatedAt: "desc" },
     ],
     take: pagesize,
     include: { tag: true },
-    where: { archived: false },
     skip: (condition.page - 1) * pagesize,
   });
 
@@ -84,6 +94,7 @@ export async function findPostsByTagAndPage(
 ): Promise<PRes<PostMeta>> {
   const total = await db.post.count({
     where: {
+      deletedAt: null,
       archived: false,
       tagId: condition.id,
     },
@@ -91,6 +102,7 @@ export async function findPostsByTagAndPage(
 
   const res = await db.post.findMany({
     where: {
+      deletedAt: null,
       archived: false,
       tagId: condition.id,
     },
@@ -125,6 +137,7 @@ export async function findPostsByKeywordAndPage(
 ): Promise<PRes<PostMeta>> {
   const total = await db.post.count({
     where: {
+      deletedAt: null,
       OR: [
         { title: { contains: condition.q } },
         { brief: { contains: condition.q } },
@@ -134,6 +147,7 @@ export async function findPostsByKeywordAndPage(
 
   const res = await db.post.findMany({
     where: {
+      deletedAt: null,
       OR: [
         { title: { contains: condition.q } },
         { brief: { contains: condition.q } },
@@ -169,7 +183,10 @@ export async function findPostBySlug(
 ): Promise<PostMeta | undefined > {
   const post = await db.post.findUnique({
     include: { tag: true },
-    where: { slug: condition.slug },
+    where: {
+      deletedAt: null,
+      slug: condition.slug,
+    },
   });
 
   return post
@@ -182,6 +199,7 @@ export async function findPostBySlug(
       archived: post.archived,
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
+      deletedAt: post.deletedAt,
     } satisfies PostMeta
     : undefined;
 }
@@ -191,6 +209,7 @@ export async function findPostBySlug(
  */
 export async function findAllSlugs(): Promise<Array<string>> {
   const slugs = await db.post.findMany({
+    where: { deletedAt: null },
     select: { slug: true },
   });
 

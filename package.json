@@ -14,7 +14,9 @@
     "start": "remix-serve ./build/server/index.js",
     "typecheck": "tsc",
     "db:test": "tsx scripts/db.test.ts",
-    "db:update": "tsx scripts/update-meta.ts",
+    "db:update": "tsx scripts/db.update.ts",
+    "db:delete": "tsx scripts/db.delete.ts",
+    "db:restore": "tsx scripts/db.restore.ts",
     "db:migrate": "prisma migrate dev --name init"
   },
   "dependencies": {

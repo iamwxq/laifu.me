@@ -183,6 +183,22 @@ export async function findPostBySlug(slug: string) {
 }
 
 export async function deletePostBySlug(slug: string) {
+  const post = await db.post.update({
+    where: { slug },
+    data: { deletedAt: new Date() },
+  });
+  console.log(post);
+}
+
+export async function restorePostBySlug(slug: string) {
+  const post = await db.post.update({
+    where: { slug },
+    data: { deletedAt: null },
+  });
+  console.log(post);
+}
+
+export async function hardDeletePostBySlug(slug: string) {
   const post = await db.post.delete({
     where: { slug },
   });
@@ -192,8 +208,12 @@ export async function deletePostBySlug(slug: string) {
 export async function main() {
   // await insertTags();
   // await insertPosts();
+  // await deletePostBySlug("test-permission");
+  // await restorePostBySlug("test-permission");
+  // await hardDeletePostBySlug("test-permission");
+  // await hardDeletePostBySlug("hello-world");
   await findAllPosts();
-  await findAllTags();
+  // await findAllTags();
   // await updateTagsCount();
   // await findTagById(1);
   // await findPostBySlug("movie-analysis-techniques");

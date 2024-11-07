@@ -11,16 +11,17 @@ datasource db {
 }
 
 model Post {
-  slug      String   @id
+  slug      String    @id
   hash      String?
-  title     String   @unique
-  words     Int      @default(0)
-  brief     String   @default("")
-  archived  Boolean  @default(false)
-  createdAt DateTime @default(now()) @map("create_at")
-  updatedAt DateTime @default(now()) @map("update_at")
-  tag       Tag      @relation(fields: [tagId], references: [id])
-  tagId     Int      @map("tag_id")
+  title     String    @unique
+  words     Int       @default(0)
+  brief     String    @default("")
+  archived  Boolean   @default(false)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  tag       Tag       @relation(fields: [tagId], references: [id])
+  tagId     Int       @map("tag_id")
 
   @@map("tbl_post")
 }
