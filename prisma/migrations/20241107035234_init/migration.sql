@@ -1,6 +1,7 @@
 -- CreateTable
 CREATE TABLE "tbl_post" (
     "slug" TEXT NOT NULL PRIMARY KEY,
+    "hash" TEXT,
     "title" TEXT NOT NULL,
     "words" INTEGER NOT NULL DEFAULT 0,
     "brief" TEXT NOT NULL DEFAULT '',

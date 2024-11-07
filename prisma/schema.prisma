@@ -12,6 +12,7 @@ datasource db {
 
 model Post {
   slug      String   @id
+  hash      String?
   title     String   @unique
   words     Int      @default(0)
   brief     String   @default("")
