@@ -18,10 +18,9 @@
   - ~~插图~~
   - 表格
   - 注脚
-- [ ] 为项目添加工程化工具
-  - husky
-  - lint-staged
-  - commitlint
+- [x] 为项目添加工程化工具
+  - ~~husky~~
+  - ~~lint-staged~~
 
 ### Bugs
 
