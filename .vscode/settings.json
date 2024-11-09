@@ -1,6 +1,9 @@
 {
+  // Enable the ESlint flat config support
+  "eslint.useFlatConfig": true,
+
   // Disable the default formatter, use eslint instead
-  "prettier.enable": false,
+  "eslint.enable": true,
   "editor.formatOnSave": false,
 
   // Auto fix
@@ -20,7 +23,8 @@
     { "rule": "*-dangle", "severity": "off", "fixable": true },
     { "rule": "*-newline", "severity": "off", "fixable": true },
     { "rule": "*quotes", "severity": "off", "fixable": true },
-    { "rule": "*semi", "severity": "off", "fixable": true }
+    { "rule": "*semi", "severity": "off", "fixable": true },
+    { "rule": "vue/max-attributes-per-line", "severity": "off", "fixable": true }
   ],
 
   // Enable eslint for all supported languages
@@ -45,13 +49,7 @@
     "less",
     "scss",
     "pcss",
-    "postcss",
-    "mdx"
-  ],
-
-  // For tailwindcss & clsx
-  "tailwindCSS.experimental.classRegex": [
-    ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^\"'`]*)(?:'|\"|`)"]
+    "postcss"
   ],
 
   "css.validate": true,
@@ -63,6 +61,18 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "vscode.css-language-features"
   },
+  "scss.validate": true,
+  "scss.lint.unknownAtRules": "ignore",
+  "scss.format.maxPreserveNewLines": 1,
+  "scss.format.newlineBetweenRules": true,
+  "scss.format.newlineBetweenSelectors": true,
+  "[scss]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "vscode.css-language-features"
+  },
+
+  "errorLens.excludeBySource": ["eslint"],
+  "typescript.tsdk": "node_modules/typescript/lib",
 
   "[prisma]": {
     "editor.formatOnSave": true,
