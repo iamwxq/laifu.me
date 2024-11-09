@@ -45,7 +45,7 @@ function Me({ statistics, sticky = true }: Props) {
           </div>
         </div>
 
-        <blockquote className="no-italic text-center font-normal text-zinc-400">那我懂你意思了</blockquote>
+        <blockquote className="text-center font-normal not-italic text-zinc-400">那我懂你意思了</blockquote>
       </div>
 
       <NavLink

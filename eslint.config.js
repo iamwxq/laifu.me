@@ -1,7 +1,5 @@
 import antfu from "@antfu/eslint-config";
-import { FlatCompat } from "@eslint/eslintrc";
-
-const compat = new FlatCompat();
+import tailwind from "eslint-plugin-tailwindcss";
 
 export default antfu(
   {
@@ -11,15 +9,11 @@ export default antfu(
       semi: true,
       quotes: "double",
     },
+    ignores: ["prisma"],
     react: true, // react
+    markdown: true,
     rules: {
       "style/quotes": ["error", "double"],
-    },
-    markdown: true,
-  },
-  // react
-  {
-    rules: {
       "react/prop-types": "off",
       "react-hooks/exhaustive-deps": "off",
       "react-refresh/only-export-components": "off",
@@ -38,14 +32,5 @@ export default antfu(
       ],
     },
   },
-  ...compat.config({
-    // https://github.com/francoismassart/eslint-plugin-tailwindcss
-    extends: ["plugin:tailwindcss/recommended"],
-    rules: {
-      "tailwindcss/no-custom-classname": "off",
-    },
-  }),
-  // ...compat.config({
-  //   extends: ["plugin:mdx/recommended"],
-  // }),
+  ...tailwind.configs["flat/recommended"],
 );

@@ -1,5 +1,3 @@
-import clsx from "clsx";
-
 interface Props {
   src: string;
   width?: number;

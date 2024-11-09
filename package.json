@@ -22,9 +22,9 @@
   "dependencies": {
     "@mdx-js/rollup": "^3.1.0",
     "@prisma/client": "5.21.1",
-    "@remix-run/node": "^2.13.1",
-    "@remix-run/react": "^2.13.1",
-    "@remix-run/serve": "^2.13.1",
+    "@remix-run/node": "^2.14.0",
+    "@remix-run/react": "^2.14.0",
+    "@remix-run/serve": "^2.14.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "isbot": "^5.1.17",
@@ -40,8 +40,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^3.8.0",
     "@eslint-react/eslint-plugin": "^1.15.2",
-    "@eslint/eslintrc": "^3.1.0",
-    "@remix-run/dev": "^2.13.1",
+    "@remix-run/dev": "^2.14.0",
     "@shikijs/rehype": "^1.22.2",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
@@ -57,6 +56,6 @@
     "tsx": "^4.19.2",
     "typescript": "^5.6.3",
     "vite": "^5.4.10",
-    "vite-tsconfig-paths": "^5.1.0"
+    "vite-tsconfig-paths": "^5.1.1"
   }
 }
