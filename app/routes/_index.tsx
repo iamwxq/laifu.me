@@ -1,18 +1,23 @@
-import { json } from "@remix-run/node";
+import type { PostMeta, Statistics } from "~/.server/model";
 import { useLoaderData } from "@remix-run/react";
 import { findAllPosts, findStatistics } from "~/.server/dal/post";
 import Me from "~/components/me";
 import Post from "~/components/post";
 
+interface LoaderReturnType {
+  articles: Array<PostMeta>;
+  statistics: Statistics;
+}
+
 export async function loader() {
   const articles = await findAllPosts();
   const statistics = await findStatistics();
 
-  return json({ articles, statistics });
+  return Response.json({ articles, statistics });
 }
 
 function Index() {
-  const { articles, statistics } = useLoaderData<typeof loader>();
+  const { articles, statistics } = useLoaderData<LoaderReturnType>();
 
   return (
     <div>

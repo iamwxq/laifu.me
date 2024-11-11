@@ -1,10 +1,10 @@
 import type { PostMeta } from "~/.server/model";
-import { type json, Link, type useLoaderData } from "@remix-run/react";
+import { Link } from "@remix-run/react";
 import Tag from "~/components/tag";
 import { fDatetime } from "~/utils";
 
 interface Props {
-  post: ReturnType<typeof useLoaderData<typeof json<PostMeta>>>;
+  post: PostMeta;
 }
 
 function Post({ post }: Props) {

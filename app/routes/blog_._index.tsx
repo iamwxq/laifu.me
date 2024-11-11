@@ -1,6 +1,7 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { PostMeta, PRes, Tag } from "~/.server/model";
 import type { FormEvent } from "react";
-import { json, redirect } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { Form, useLoaderData, useNavigate, useSubmit } from "@remix-run/react";
 import { findPostsByKeywordAndPage, findPostsByPage, findPostsByTagAndPage } from "~/.server/dal/post";
 import { findManyTags } from "~/.server/dal/tag";
@@ -9,6 +10,14 @@ import { CircleX, Search } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Pagination from "~/components/pagination";
 import Post from "~/components/post";
+
+interface LoaderReturnType {
+  tagId: number;
+  p: string | null;
+  q: string | null;
+  taglist: Array<Tag>;
+  postlist: PRes<PostMeta>;
+}
 
 function useDebounce(fn: (...args: any[]) => any, delay: number) {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -73,7 +82,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return redirect(`/blog?p=${postlist.totalpage}${t === null ? "" : `&t=${t}`}${q === null ? "" : `&q=${q}`}`);
   }
 
-  return json({ tagId: id, q, p, postlist, taglist });
+  return Response.json({ tagId: id, q, p, postlist, taglist });
 }
 
 function Index() {
@@ -84,7 +93,7 @@ function Index() {
     tagId,
     taglist,
     postlist,
-  } = useLoaderData<typeof loader>();
+  } = useLoaderData<LoaderReturnType>();
 
   const ref = useRef<HTMLInputElement>(null);
 

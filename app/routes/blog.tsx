@@ -1,5 +1,5 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { isRouteErrorResponse, json, Link, Outlet, useLoaderData, useLocation, useNavigate, useRouteError } from "@remix-run/react";
+import { isRouteErrorResponse, Link, Outlet, useLoaderData, useLocation, useNavigate, useRouteError } from "@remix-run/react";
 import { findAllSlugs, findPostBySlug, findStatistics } from "~/.server/dal/post";
 import clsx from "clsx";
 import { ArrowLeft, ArrowUp, Dot } from "lucide-react";
@@ -27,7 +27,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const slug = url.pathname.slice(slash + 1);
   const slugs = await findAllSlugs();
   if (!slugs.includes(slug)) {
-    throw json(
+    throw Response.json(
       { message: "no permission to access this post" },
       {
         status: ErrorCode.Unauthorized,
@@ -39,7 +39,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const postmeta = await findPostBySlug({ slug });
   const statistics = await findStatistics();
 
-  return json({ postmeta, statistics });
+  return Response.json({ postmeta, statistics });
 }
 
 export function ErrorBoundary() {
@@ -49,7 +49,7 @@ export function ErrorBoundary() {
     return <ErrorUnauthorized />;
   }
 
-  throw json(
+  throw Response.json(
     {
       message: "other type errors",
     },
