@@ -63,8 +63,8 @@ function Blog() {
   const navigate = useNavigate();
   const { hash, pathname } = useLocation();
   const [show, setShow] = useState<boolean>(false);
-  const { postmeta, statistics } = useLoaderData<typeof loader>();
   const [headings, setHeadings] = useState<Array<Heading>>([]);
+  const { postmeta, statistics } = useLoaderData<typeof loader>();
 
   function handleClickAnchor(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id: string) {
     e.preventDefault();

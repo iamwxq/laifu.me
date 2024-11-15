@@ -50,7 +50,7 @@
 }
 
 .content pre {
-  @apply mb-8 rounded-xl px-3.5 py-3 border dark:border-zinc-700;
+  @apply mb-8 rounded-xl px-3.5 py-3 border dark:border-zinc-700 tracking-wide leading-6;
 }
 
 .dark .content pre {
