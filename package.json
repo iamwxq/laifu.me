@@ -20,7 +20,7 @@
     "db:restore": "tsx scripts/db.restore.ts",
     "db:migrate": "prisma migrate dev --name init",
     "prepare": "husky",
-    "postinstall": "pnpm run db:migrate && pnpm run db:update"
+    "postinstall": "pnpm run build"
   },
   "dependencies": {
     "@mdx-js/rollup": "^3.1.0",
