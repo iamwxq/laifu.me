@@ -12,7 +12,7 @@ import {
 } from "@remix-run/react";
 import { themeSessionResolver } from "~/.server/session";
 import clsx from "clsx";
-import { PreventFlashOnWrongTheme, Theme, ThemeProvider, useTheme } from "remix-themes";
+import { PreventFlashOnWrongTheme, ThemeProvider, useTheme } from "remix-themes";
 import ErrorInternalSystem from "~/errors/internal-system";
 import ErrorNotFound from "~/errors/not-found";
 import Footer from "~/layouts/footer";
@@ -76,23 +76,8 @@ export function ErrorBoundary() {
 }
 
 export function App() {
-  const [theme, setTheme] = useTheme();
+  const theme = useTheme()[0];
   const data = useLoaderData<typeof loader>();
-
-  const isDark = theme === Theme.DARK;
-
-  function handleSwitchTheme() {
-    switch (theme) {
-      case Theme.DARK:
-        setTheme(Theme.LIGHT);
-        break;
-      case Theme.LIGHT:
-        setTheme(Theme.DARK);
-        break;
-      default:
-        setTheme(Theme.LIGHT);
-    }
-  }
 
   return (
     <html className={clsx(theme)} lang="zh-Hans">
@@ -107,7 +92,7 @@ export function App() {
 
       <body>
         <div className="relative min-h-screen bg-white selection:bg-zinc-200 dark:bg-black dark:selection:bg-zinc-700">
-          <Header isDark={isDark} onSwitchTheme={handleSwitchTheme} />
+          <Header />
 
           <div className="mx-auto flex min-h-[calc(100vh-57px)] max-w-7xl flex-col px-6">
             <Outlet />

@@ -24,4 +24,8 @@
 
 ### Bugs
 
-- [ ] 在没有缓存的情况下，主题切换按钮渲染错误
+- [x] 主题切换按钮渲染错误
+  - 没有缓存的情况下，hydration 时会存在两端不一致性问题
+    - 对于 SSR，`theme` 为 `null`
+    - 对于 CSR，`theme` 为系统默认主题色 `window.matchMedia("(prefers-color-scheme: dark)")`
+  - 删除了条件渲染的代码，转而使用 TailwindCSS 中的 `dark:` 媒体查询作为条件渲染的替代

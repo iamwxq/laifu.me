@@ -1,14 +1,21 @@
 import { NavLink, useLocation } from "@remix-run/react";
 import clsx from "clsx";
 import { Moon, Sun } from "lucide-react";
+import { Theme, useTheme } from "remix-themes";
 
-interface Props {
-  isDark: boolean;
-  onSwitchTheme: () => void;
-}
-
-function Header({ isDark, onSwitchTheme }: Props) {
+function Header() {
   const location = useLocation();
+  const [theme, setTheme] = useTheme();
+
+  function handleSwitchTheme() {
+    switch (theme) {
+      case Theme.DARK:
+        setTheme(Theme.LIGHT);
+        break;
+      case Theme.LIGHT:
+        setTheme(Theme.DARK);
+    }
+  }
 
   return (
     <header className={clsx(
@@ -73,20 +80,10 @@ function Header({ isDark, onSwitchTheme }: Props) {
         <button
           className="group flex items-center justify-center px-3 py-1"
           type="button"
-          onClick={onSwitchTheme}
+          onClick={handleSwitchTheme}
         >
-          <Sun
-            className={clsx(
-              "size-5 cursor-pointer select-none text-zinc-400 transition-all group-hover:text-zinc-50",
-              !isDark && "hidden",
-            )}
-          />
-          <Moon
-            className={clsx(
-              "size-5 cursor-pointer select-none text-zinc-500 transition-all group-hover:text-zinc-800",
-              isDark && "hidden",
-            )}
-          />
+          <Sun className="hidden size-5 cursor-pointer select-none text-zinc-400 transition-all group-hover:text-zinc-50 dark:block" />
+          <Moon className="block size-5 cursor-pointer select-none text-zinc-500 transition-all group-hover:text-zinc-800 dark:hidden" />
         </button>
       </div>
     </header>
