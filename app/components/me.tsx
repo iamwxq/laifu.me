@@ -1,8 +1,8 @@
 import type { Statistics } from "~/.server/model";
 import { NavLink } from "@remix-run/react";
 import clsx from "clsx";
-import avatar from "~/assets/images/avatar.jpg";
 import { fNumber } from "~/utils";
+import avatar from "/me.jpg?url";
 
 interface Props {
   statistics: Statistics | undefined;
