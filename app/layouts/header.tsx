@@ -1,27 +1,14 @@
 import { NavLink, useLocation } from "@remix-run/react";
 import clsx from "clsx";
 import { Moon, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Theme, useTheme } from "remix-themes";
 
-function Header() {
+interface Props {
+  isDark: boolean;
+  onSwitchTheme: () => void;
+}
+
+function Header({ isDark, onSwitchTheme }: Props) {
   const location = useLocation();
-  const [theme, setTheme] = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  function handleSwitchMode() {
-    switch (theme) {
-      case Theme.DARK:
-        setTheme(Theme.LIGHT);
-        return;
-      case Theme.LIGHT:
-        setTheme(Theme.DARK);
-    }
-  }
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
     <header className={clsx(
@@ -86,27 +73,20 @@ function Header() {
         <button
           className="group flex items-center justify-center px-3 py-1"
           type="button"
-          onClick={handleSwitchMode}
+          onClick={onSwitchTheme}
         >
-          {!mounted && <div className="size-5" />}
-
-          {mounted && (
-            <Sun
-              className={clsx(
-                "size-5 cursor-pointer select-none text-zinc-200 transition-all group-hover:text-zinc-50",
-                theme === Theme.LIGHT && "hidden",
-              )}
-            />
-          )}
-
-          {mounted && (
-            <Moon
-              className={clsx(
-                "size-5 cursor-pointer select-none text-zinc-500 transition-all group-hover:text-zinc-800",
-                theme === Theme.DARK && "hidden",
-              )}
-            />
-          )}
+          <Sun
+            className={clsx(
+              "size-5 cursor-pointer select-none text-zinc-400 transition-all group-hover:text-zinc-50",
+              !isDark && "hidden",
+            )}
+          />
+          <Moon
+            className={clsx(
+              "size-5 cursor-pointer select-none text-zinc-500 transition-all group-hover:text-zinc-800",
+              isDark && "hidden",
+            )}
+          />
         </button>
       </div>
     </header>
