@@ -43,7 +43,7 @@ function Header() {
               "select-none rounded-md px-4 py-2 transition-all duration-75 hover:bg-zinc-100/70 dark:hover:bg-slate-900/70",
               {
                 "font-semibold text-cyan-500": location.pathname === "/blog",
-                "text-zinc-500 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-50": location.pathname !== "/blog",
+                "text-zinc-800 dark:text-zinc-50": location.pathname !== "/blog",
               },
             )}
           >
@@ -56,7 +56,7 @@ function Header() {
               "select-none rounded-md px-4 py-2 transition-all duration-75 hover:bg-zinc-100/70 dark:hover:bg-slate-900/70",
               {
                 "font-semibold text-cyan-500": location.pathname === "/about",
-                "text-zinc-500 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-50": location.pathname !== "/about",
+                "text-zinc-800 dark:text-zinc-50": location.pathname !== "/about",
               },
             )}
           >
@@ -69,7 +69,7 @@ function Header() {
               "select-none rounded-md px-4 py-2 transition-all duration-75 hover:bg-zinc-100/70 dark:hover:bg-slate-900/70",
               {
                 "font-semibold text-cyan-500": location.pathname === "/archive",
-                "text-zinc-500 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-50": location.pathname !== "/archive",
+                "text-zinc-800 dark:text-zinc-50": location.pathname !== "/archive",
               },
             )}
           >
@@ -83,7 +83,7 @@ function Header() {
           onClick={handleSwitchTheme}
         >
           <Sun className="hidden size-5 cursor-pointer select-none text-zinc-400 transition-all group-hover:text-zinc-50 dark:block" />
-          <Moon className="block size-5 cursor-pointer select-none text-zinc-500 transition-all group-hover:text-zinc-800 dark:hidden" />
+          <Moon className="block size-5 cursor-pointer select-none text-zinc-400 transition-all group-hover:text-zinc-800 dark:hidden" />
         </button>
       </div>
     </header>
