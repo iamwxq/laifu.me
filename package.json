@@ -2,6 +2,7 @@
   "name": "blog",
   "type": "module",
   "private": true,
+  "packageManager": "pnpm@9.13.2",
   "sideEffects": false,
   "engines": {
     "node": ">=20.0.0"
