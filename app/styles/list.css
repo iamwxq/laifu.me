@@ -1,20 +1,20 @@
 /**************************** 列表 *****************************/
-.content ul[class="contains-task-list"],
+.content ul,
 .content ol {
   @apply pl-9 my-3;
 }
 
-.content ul[class="contains-task-list"] li,
+.content ul li,
 .content ol li {
   @apply flex items-start dark:text-zinc-100 text-zinc-800 text-[16px] last:mb-0 mb-2;
 }
 
-.content ul[class="contains-task-list"] li>div,
+.content ul li>div,
 .content ol li>div {
   @apply flex-1;
 }
 
-.content ul[class="contains-task-list"] li::before {
+.content ul li::before {
   content: "";
   @apply size-[6px] mr-4 rounded-full bg-zinc-400 flex-shrink-0 mt-[15px];
 }
@@ -30,39 +30,34 @@
   @apply mr-2 flex-shrink-0;
 }
 
-.content ul[class="contains-task-list"] li input[type="checkbox"],
+.content ul li input[type="checkbox"],
 .content ol li input[type="checkbox"] {
   appearance: none;
-  @apply size-[18px] mr-2 mt-[9px] flex-shrink-0 rounded-sm transition-all border relative border-zinc-400;
+  @apply bg-zinc-50 size-[18px] mr-2 mt-[9px] flex-shrink-0 rounded-sm transition-all border relative border-zinc-400;
 }
 
-.dark .content ul[class="contains-task-list"] li input[type="checkbox"],
+.content ul li input[type="checkbox"]:checked,
+.content ol li input[type="checkbox"]:checked {
+  @apply bg-zinc-200;
+}
+
+.dark .content ul li input[type="checkbox"],
 .dark .content ol li input[type="checkbox"] {
   @apply bg-zinc-600;
 }
 
-.dark .content ul[class="contains-task-list"] li input[type="checkbox"]:checked,
+.dark .content ul li input[type="checkbox"]:checked,
 .dark .content ol li input[type="checkbox"]:checked {
   @apply bg-zinc-800;
 }
 
-.light .content ul[class="contains-task-list"] li input[type="checkbox"],
-.light .content ol li input[type="checkbox"] {
-  @apply bg-zinc-100;
-}
-
-.light .content ul[class="contains-task-list"] li input[type="checkbox"]:checked,
-.light .content ol li input[type="checkbox"]:checked {
-  @apply bg-zinc-300;
-}
-
-.content ul[class="contains-task-list"] li input[type="checkbox"]:checked::after,
+.content ul li input[type="checkbox"]:checked::after,
 .content ol li input[type="checkbox"]:checked::after {
   content: "√";
   @apply absolute -top-[9px] left-[4px] text-[14px] font-bold text-zinc-600;
 }
 
-.dark .content ul[class="contains-task-list"] li input[type="checkbox"]:checked::after,
+.dark .content ul li input[type="checkbox"]:checked::after,
 .dark .content ol li input[type="checkbox"]:checked::after {
   @apply text-zinc-200;
 }
