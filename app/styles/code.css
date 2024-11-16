@@ -1,0 +1,32 @@
+/**************************** 代码块 *****************************/
+.content code {
+  @apply font-code;
+}
+
+.content :not(.shiki) code {
+  @apply dark:bg-zinc-800 px-1.5 py-0.5 rounded-md mx-0.5 bg-zinc-200/65 border border-zinc-300 dark:border-zinc-700;
+}
+
+.content pre {
+  @apply mb-8 rounded-xl px-3.5 py-3 border dark:border-zinc-700 tracking-wide leading-6 border-zinc-300;
+}
+
+.dark .content pre {
+  background-color: rgba(255, 255, 255, .04) !important;
+}
+
+.light .content pre {
+  background-color: rgba(0, 0, 0, .04) !important;
+}
+
+html .shiki,
+html .shiki span {
+  font-style: normal !important;
+  font-weight: normal !important;
+}
+
+html.dark .shiki,
+html.dark .shiki span {
+  color: var(--shiki-dark) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}

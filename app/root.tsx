@@ -12,7 +12,7 @@ import {
 } from "@remix-run/react";
 import { themeSessionResolver } from "~/.server/session";
 import clsx from "clsx";
-import { PreventFlashOnWrongTheme, ThemeProvider, useTheme } from "remix-themes";
+import { PreventFlashOnWrongTheme, Theme, ThemeProvider, useTheme } from "remix-themes";
 import ErrorInternalSystem from "~/errors/internal-system";
 import ErrorNotFound from "~/errors/not-found";
 import Footer from "~/layouts/footer";
@@ -42,16 +42,15 @@ export const links: LinksFunction = () => [
 ];
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { getTheme } = await themeSessionResolver(request);
-  return { theme: getTheme() };
+  return { theme: (await themeSessionResolver(request)).getTheme() };
 }
 
 export function ErrorBoundary() {
   const error = useRouteError();
-  const rootdata = useRouteLoaderData<typeof loader>("root");
+  const data = useRouteLoaderData<typeof loader>("root");
 
   return (
-    <html className={clsx(rootdata?.theme)} lang="zh-Hans">
+    <html className={clsx(data?.theme)} lang="zh-Hans">
       <head>
         <meta charSet="utf-8" />
         <meta content="width=device-width, initial-scale=1" name="viewport" />
@@ -61,7 +60,7 @@ export function ErrorBoundary() {
       </head>
       <body>
         <div className="relative min-h-screen bg-white selection:bg-zinc-200 dark:bg-black dark:selection:bg-zinc-700">
-          <div className="h-[57px]"></div>
+          <div className="h-[57px]" />
 
           <div className="mx-auto flex min-h-[calc(100vh-57px)] max-w-7xl flex-col px-6">
             {isRouteErrorResponse(error) && error.status === ErrorCode.NotFound && <ErrorNotFound />}
@@ -77,8 +76,23 @@ export function ErrorBoundary() {
 }
 
 export function App() {
-  const theme = useTheme()[0];
+  const [theme, setTheme] = useTheme();
   const data = useLoaderData<typeof loader>();
+
+  const isDark = theme === Theme.DARK;
+
+  function handleSwitchTheme() {
+    switch (theme) {
+      case Theme.DARK:
+        setTheme(Theme.LIGHT);
+        break;
+      case Theme.LIGHT:
+        setTheme(Theme.DARK);
+        break;
+      default:
+        setTheme(Theme.LIGHT);
+    }
+  }
 
   return (
     <html className={clsx(theme)} lang="zh-Hans">
@@ -93,7 +107,7 @@ export function App() {
 
       <body>
         <div className="relative min-h-screen bg-white selection:bg-zinc-200 dark:bg-black dark:selection:bg-zinc-700">
-          <Header />
+          <Header isDark={isDark} onSwitchTheme={handleSwitchTheme} />
 
           <div className="mx-auto flex min-h-[calc(100vh-57px)] max-w-7xl flex-col px-6">
             <Outlet />

@@ -1,0 +1,12 @@
+/**************************** 引用块 *****************************/
+.content blockquote {
+  @apply mb-3 px-3 py-1.5 border-l-[6px] border-zinc-300 bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-900 border-t border-b border-r rounded-lg;
+}
+
+.content blockquote p {
+  @apply text-zinc-600 dark:text-zinc-300;
+}
+
+.content blockquote p:last-child {
+  @apply mb-0;
+}

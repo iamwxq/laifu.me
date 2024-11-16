@@ -8,16 +8,21 @@ import CircleButton from "~/components/circle-button";
 import Me from "~/components/me";
 import Tag from "~/components/tag";
 import ErrorUnauthorized from "~/errors/unauthorized";
-import styles from "~/styles/post.css?url";
+import blockQuoteStyles from "~/styles/block-quote.css?url";
+import codeStyles from "~/styles/code.css?url";
+import figureStyles from "~/styles/figure.css?url";
+import listStyles from "~/styles/list.css?url";
+import paragraphStyles from "~/styles/paragraph.css?url";
 import type { Heading, HeadingName } from "~/types";
 import { ErrorCode } from "~/types";
 import { fDatetime, fNumber } from "~/utils";
 
 export const links: LinksFunction = () => [
-  {
-    rel: "stylesheet",
-    href: styles,
-  },
+  { rel: "stylesheet", href: listStyles },
+  { rel: "stylesheet", href: codeStyles },
+  { rel: "stylesheet", href: figureStyles },
+  { rel: "stylesheet", href: paragraphStyles },
+  { rel: "stylesheet", href: blockQuoteStyles },
 ];
 
 export async function loader({ request }: LoaderFunctionArgs) {

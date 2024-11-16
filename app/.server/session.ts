@@ -7,14 +7,14 @@ const isProduction = process.env.NODE_ENV === "production";
 
 const sessionStorage = createCookieSessionStorage({
   cookie: {
-    name: "theme",
     path: "/",
     httpOnly: true,
     sameSite: "lax",
-    secrets: ["s3cr3t"],
+    secrets: ["s3cr3t_laifu"],
+    name: "laifu_theme",
     // Set domain and secure only if in production
     ...(isProduction
-      ? { domain: "your-production-domain.com", secure: true }
+      ? { domain: "laifu.me", secure: true }
       : {}),
   },
 });
