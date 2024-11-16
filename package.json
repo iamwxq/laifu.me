@@ -19,7 +19,8 @@
     "db:delete": "tsx scripts/db.delete.ts",
     "db:restore": "tsx scripts/db.restore.ts",
     "db:migrate": "prisma migrate dev --name init",
-    "prepare": "husky"
+    "prepare": "husky",
+    "postinstall": "prisma migrate dev --name init"
   },
   "dependencies": {
     "@mdx-js/rollup": "^3.1.0",
