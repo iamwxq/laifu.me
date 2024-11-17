@@ -37,7 +37,9 @@ function Index() {
           {posts.map(post => <Post key={post.slug} post={post} />)}
         </ul>
 
-        <Me sticky statistics={statistics} />
+        <div className="col-span-2">
+          <Me sticky statistics={statistics} />
+        </div>
       </main>
     </div>
   );

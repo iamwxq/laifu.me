@@ -13,7 +13,7 @@ function Me({ statistics, sticky = true }: Props) {
   return (
     <aside className={clsx(
       !sticky && "relative",
-      "col-span-2 mx-auto max-w-lg text-black lg:mx-0 dark:text-white",
+      "mx-auto max-w-lg text-black dark:text-white",
       sticky && "sticky top-[57px]",
     )}
     >

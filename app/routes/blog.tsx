@@ -168,7 +168,9 @@ function Blog() {
       </div>
 
       <div className="col-span-2 xl:pt-8">
-        <Me statistics={statistics} sticky={false} />
+        <div>
+          <Me statistics={statistics} sticky={false} />
+        </div>
         <ul className="sticky top-[57px] mt-20 hidden gap-0 pt-3 xl:flex xl:flex-col">
           {headings.length > 0 && <div className="mb-4 text-center text-lg text-zinc-700 dark:text-zinc-100">大纲</div>}
           {headings.map((h, i) => (
