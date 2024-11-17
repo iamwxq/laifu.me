@@ -8,16 +8,13 @@ const pagesize = 10;
  */
 export async function findAllPosts(): Promise<Array<PostMeta>> {
   const res = await db.post.findMany({
-    where: {
-      deletedAt: null,
-      archived: false,
-    },
     orderBy: [
       { createdAt: "desc" },
       { updatedAt: "desc" },
     ],
     take: 14,
     include: { tag: true },
+    where: { deletedAt: null },
   });
 
   const data: Array<PostMeta> = res.map(({ tagId, ...rest }) => rest);
@@ -30,9 +27,9 @@ export async function findAllPosts(): Promise<Array<PostMeta>> {
  */
 export async function findStatistics(): Promise<Statistics> {
   const res = await db.post.aggregate({
-    where: { deletedAt: null },
     _sum: { words: true },
     _count: { _all: true },
+    where: { deletedAt: null },
   });
 
   const data: Statistics = {
@@ -52,23 +49,17 @@ export async function findPostsByPage(
   },
 ): Promise<PRes<PostMeta>> {
   const total = await db.post.count({
-    where: {
-      deletedAt: null,
-      archived: false,
-    },
+    where: { deletedAt: null },
   });
 
   const res = await db.post.findMany({
-    where: {
-      deletedAt: null,
-      archived: false,
-    },
     orderBy: [
       { createdAt: "desc" },
       { updatedAt: "desc" },
     ],
     take: pagesize,
     include: { tag: true },
+    where: { deletedAt: null },
     skip: (condition.page - 1) * pagesize,
   });
 
@@ -95,7 +86,6 @@ export async function findPostsByTagAndPage(
   const total = await db.post.count({
     where: {
       deletedAt: null,
-      archived: false,
       tagId: condition.id,
     },
   });
@@ -103,7 +93,6 @@ export async function findPostsByTagAndPage(
   const res = await db.post.findMany({
     where: {
       deletedAt: null,
-      archived: false,
       tagId: condition.id,
     },
     orderBy: [
@@ -196,7 +185,6 @@ export async function findPostBySlug(
       brief: post.brief,
       title: post.title,
       words: post.words,
-      archived: post.archived,
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
       deletedAt: post.deletedAt,

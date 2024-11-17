@@ -15,7 +15,6 @@ export interface PostMeta {
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
-  archived: boolean;
 }
 
 // 文章原始元数据
