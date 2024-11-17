@@ -206,7 +206,7 @@ function Blog() {
         </ul>
       </div>
 
-      <div className="fixed bottom-4 right-6 flex flex-col gap-3 xl:hidden">
+      <div className="fixed bottom-4 right-5 flex flex-col gap-3 xl:hidden">
         <CircleButton behavior={handleBackBehavior}>
           <ArrowLeft />
         </CircleButton>
