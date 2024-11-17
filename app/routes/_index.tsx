@@ -5,19 +5,19 @@ import Me from "~/components/me";
 import Post from "~/components/post";
 
 interface LoaderReturnType {
-  articles: Array<PostMeta>;
+  posts: Array<PostMeta>;
   statistics: Statistics;
 }
 
 export async function loader() {
-  const articles = await findAllPosts();
+  const posts = await findAllPosts();
   const statistics = await findStatistics();
 
-  return Response.json({ articles, statistics });
+  return Response.json({ posts, statistics });
 }
 
 function Index() {
-  const { articles, statistics } = useLoaderData<LoaderReturnType>();
+  const { posts, statistics } = useLoaderData<LoaderReturnType>();
 
   return (
     <div>
@@ -32,9 +32,9 @@ function Index() {
         </b>
       </div>
 
-      <main className="grid grid-cols-9 pt-20 text-black dark:text-white">
-        <ul className="col-span-7 grid grid-cols-2 gap-8">
-          {articles.map(post => <Post key={post.slug} post={post} />)}
+      <main className="pt-20 text-black lg:grid lg:grid-cols-9 dark:text-white">
+        <ul className="col-span-7 md:grid md:grid-cols-2 md:gap-4 lg:gap-8">
+          {posts.map(post => <Post key={post.slug} post={post} />)}
         </ul>
 
         <Me sticky statistics={statistics} />
