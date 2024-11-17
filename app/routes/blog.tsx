@@ -55,12 +55,8 @@ export function ErrorBoundary() {
   }
 
   throw Response.json(
-    {
-      message: "other type errors",
-    },
-    {
-      status: ErrorCode.InternalSystem,
-    },
+    { message: "other type errors" },
+    { status: ErrorCode.InternalSystem },
   );
 }
 
@@ -79,6 +75,14 @@ function Blog() {
       window.scrollTo({ top: y, behavior: "smooth" });
       history.replaceState(null, "", id);
     }
+  }
+
+  function handleBackBehavior() {
+    navigate(-1);
+  }
+
+  function handleScrollTopBehavior() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   useEffect(() => {
@@ -129,7 +133,7 @@ function Blog() {
   }, []);
 
   return (
-    <div className="grid max-w-7xl grid-cols-10 gap-8">
+    <div className="max-w-7xl xl:grid xl:grid-cols-10 xl:gap-8">
       <div className="col-span-8 py-8">
         <div className="mx-auto max-w-3xl">
           {postmeta && (
@@ -163,9 +167,9 @@ function Blog() {
         </div>
       </div>
 
-      <div className="col-span-2 pt-8">
+      <div className="col-span-2 xl:pt-8">
         <Me statistics={statistics} sticky={false} />
-        <ul className="sticky top-[57px] mt-20 flex flex-col gap-0 pt-3">
+        <ul className="sticky top-[57px] mt-20 hidden gap-0 pt-3 xl:flex xl:flex-col">
           {headings.length > 0 && <div className="mb-4 text-center text-lg text-zinc-700 dark:text-zinc-100">大纲</div>}
           {headings.map((h, i) => (
             <div
@@ -189,18 +193,25 @@ function Blog() {
             </div>
           ))}
           <div className="bottom-10 mr-8 flex flex-col gap-3 self-end pt-8">
-            <CircleButton behavior={() => navigate(-1)}>
+            <CircleButton behavior={handleBackBehavior}>
               <ArrowLeft />
             </CircleButton>
 
-            <CircleButton
-              behavior={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              visible={show}
-            >
+            <CircleButton behavior={handleScrollTopBehavior} visible={show}>
               <ArrowUp />
             </CircleButton>
           </div>
         </ul>
+      </div>
+
+      <div className="fixed bottom-4 right-6 flex flex-col gap-3 xl:hidden">
+        <CircleButton behavior={handleBackBehavior}>
+          <ArrowLeft />
+        </CircleButton>
+
+        <CircleButton behavior={handleScrollTopBehavior} visible={show}>
+          <ArrowUp />
+        </CircleButton>
       </div>
     </div>
   );

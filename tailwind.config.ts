@@ -29,17 +29,15 @@ export default {
           "Noto Color Emoji",
         ],
       },
-      screens: {
-        "3xl": "1920px",
-      },
+      screens: {},
       keyframes: {
-        spin: {
+        spinning: {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
         },
       },
       animation: {
-        spinning: "spin 1s linear infinite",
+        spinning: "spinning 1s linear infinite",
       },
     },
   },

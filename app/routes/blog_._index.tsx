@@ -82,7 +82,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return redirect(`/blog?p=${postlist.totalpage}${t === null ? "" : `&t=${t}`}${q === null ? "" : `&q=${q}`}`);
   }
 
-  return Response.json({ tagId: id, q, p, postlist, taglist });
+  return Response.json({ tagId: id, q, postlist, taglist });
 }
 
 function Index() {
@@ -134,8 +134,9 @@ function Index() {
 
   return (
     <div>
+      {/* 搜索框 */}
       <div className="mx-auto max-w-2xl px-6 py-16">
-        <div className="flex items-center gap-3 rounded-[5px] px-2 py-[5px] text-zinc-400 shadow-sm outline outline-[1.5px] outline-zinc-400 transition-all focus-within:shadow-md focus-within:outline-zinc-900 dark:bg-zinc-800 dark:outline-zinc-800 dark:focus-within:outline-zinc-100">
+        <div className="flex items-center gap-3 rounded-[5px] px-2 py-[5px] text-zinc-400 shadow-sm outline outline-[1.5px] outline-zinc-200 transition-all focus-within:shadow-md focus-within:outline-zinc-900 dark:bg-zinc-800 dark:outline-zinc-700 dark:focus-within:outline-zinc-100">
           <Search className="size-[18px] dark:text-zinc-300" />
 
           <Form
@@ -166,9 +167,10 @@ function Index() {
         </div>
       </div>
 
-      <div className="grid grid-cols-6">
-        <aside className="sticky top-[57px] col-span-1 mx-auto max-w-lg self-start pt-6">
-          <ul className="flex flex-col">
+      <div className="lg:grid lg:grid-cols-6">
+        {/* 标签 */}
+        <aside className="col-span-1 mx-auto max-w-lg self-start py-6 lg:sticky lg:top-[57px] lg:pb-0">
+          <ul className="flex flex-row flex-wrap lg:flex-col lg:flex-nowrap">
             {taglist.map(tag => (
               <button
                 key={tag.id}
@@ -186,12 +188,15 @@ function Index() {
           </ul>
         </aside>
 
+        {/* 贴文 */}
         <main className="col-span-5">
-          <ul className="mx-auto grid max-w-3xl grid-cols-2 gap-12">
+          <ul className="mx-auto max-w-3xl pt-6 md:grid md:grid-cols-2 md:gap-12 lg:pt-0">
             {postlist.data?.map(post => <Post key={post.slug} post={post} />)}
           </ul>
 
-          {postlist.totalpage > 1 && (
+          {/* 分页 */}
+          {postlist.totalpage > 1
+          && (
             <Pagination
               totalpage={postlist.totalpage}
             />
