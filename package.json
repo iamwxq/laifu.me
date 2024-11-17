@@ -12,15 +12,14 @@
     "dev": "remix vite:dev --host",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "start": "remix-serve ./build/server/index.js",
+    "start": "PORT=9009 remix-serve ./build/server/index.js",
     "typecheck": "tsc",
     "db:test": "tsx scripts/db.test.ts",
     "db:update": "tsx scripts/db.update.ts",
     "db:delete": "tsx scripts/db.delete.ts",
     "db:restore": "tsx scripts/db.restore.ts",
     "db:migrate": "prisma migrate dev --name init",
-    "prepare": "husky",
-    "postinstall": "pnpm run build"
+    "prepare": "husky"
   },
   "dependencies": {
     "@mdx-js/rollup": "^3.1.0",
