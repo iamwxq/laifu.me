@@ -6,10 +6,10 @@ function Footer() {
   const now = new Date().getFullYear();
 
   return (
-    <footer className="mt-auto flex select-none items-center p-8 text-sm text-zinc-500 dark:text-zinc-300">
-      <div className="transition-all">&copy; {now} 来福 Preserved</div>
+    <footer className="mt-auto flex select-none flex-col items-center p-8 text-center text-sm text-zinc-500 sm:flex-row dark:text-zinc-300">
+      <div className="transition-all">&copy; {now} 来福</div>
 
-      <em className="ml-4 border-l border-zinc-200 pl-4 not-italic">
+      <em className="mt-4 not-italic sm:ml-4 sm:mt-0 sm:border-l sm:border-zinc-200 sm:pl-4">
         <span className="transition-all">Powered by&nbsp;</span>
         <Link
           className="transition-all hover:text-zinc-800 dark:hover:text-zinc-200"
@@ -20,7 +20,7 @@ function Footer() {
         </Link>
       </em>
 
-      <ul className="ml-auto flex items-center gap-4">
+      <ul className="mt-4 flex items-center justify-center gap-4 sm:ml-auto sm:mt-0">
         <Link className="group" target="_blank" to="https://github.com/iamwxq">
           <svg
             height="18"
