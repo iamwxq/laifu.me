@@ -12,11 +12,7 @@
     "dev": "remix vite:dev --host",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-<<<<<<< HEAD
     "start": "PORT=80 remix-serve ./build/server/index.js",
-=======
-    "start": "PORT=9009 remix-serve ./build/server/index.js",
->>>>>>> 39a0c874e05b0d91055221ba461cb818f8d240b7
     "typecheck": "tsc",
     "db:test": "tsx scripts/db.test.ts",
     "db:update": "tsx scripts/db.update.ts",

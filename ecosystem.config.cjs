@@ -1,5 +1,4 @@
 module.exports = {
-<<<<<<< HEAD
   apps : [{
     name   : "laifu",
     script : "pnpm run start",
@@ -13,10 +12,3 @@ module.exports = {
     }
   }]
 }
-=======
-  apps: [{
-    name: "laifu",
-    script: "pnpm run start",
-  }],
-};
->>>>>>> 39a0c874e05b0d91055221ba461cb818f8d240b7
