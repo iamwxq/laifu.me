@@ -5,14 +5,14 @@
   "packageManager": "pnpm@9.13.2",
   "sideEffects": false,
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "scripts": {
     "build": "remix vite:build",
     "dev": "remix vite:dev --host",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "start": "remix-serve ./build/server/index.js",
+    "start": "PORT=80 remix-serve ./build/server/index.js",
     "typecheck": "tsc",
     "db:test": "tsx scripts/db.test.ts",
     "db:update": "tsx scripts/db.update.ts",
