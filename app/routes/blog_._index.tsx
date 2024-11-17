@@ -100,12 +100,30 @@ function Index() {
   const [keyword, setKeyword] = useState(q || "");
 
   // 提交防抖
-  const debouncedSubmit = useDebounce((e: EventTarget & HTMLFormElement) => submit(e, { replace: true }), 300);
+  const debouncedSubmit = useDebounce(
+    (e: EventTarget & HTMLFormElement) =>
+      submit(e, { replace: true }),
+    300,
+  );
 
   function handleInput(e: FormEvent<HTMLFormElement>) {
     const target = e.target as HTMLInputElement;
     setKeyword(target.value);
     debouncedSubmit(e.currentTarget);
+  }
+
+  function handleEnterKeyUp(e: React.KeyboardEvent<HTMLFormElement>) {
+    if (e.key.toLowerCase() !== "enter") {
+      return;
+    }
+    const input = ref.current;
+    if (!input) {
+      return;
+    }
+    const target = e.target as HTMLInputElement;
+    setKeyword(target.value);
+    submit(e.currentTarget, { replace: true });
+    input.blur();
   }
 
   // 同时会清除对标签的筛选
@@ -145,6 +163,7 @@ function Index() {
             name="search-form"
             role="search"
             onChange={e => handleInput(e)}
+            onKeyUp={e => handleEnterKeyUp(e)}
           >
             <input hidden defaultValue="1" name="p" />
             <input
