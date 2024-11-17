@@ -70,6 +70,7 @@ export function ErrorBoundary() {
         </div>
 
         <Scripts />
+        <ScrollRestoration />
       </body>
     </html>
   );
