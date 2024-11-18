@@ -7,6 +7,9 @@ export function fNumber(num: number | undefined): string {
   return num.toLocaleString("en-US");
 }
 
-export function fDatetime(dt: string | Date): string {
-  return dayjs(dt).format("YYYY-MM-DD HH:mm");
+export function fDatetime(
+  dt: string | Date,
+  pattern: string = "YYYY-MM-DD HH:mm",
+): string {
+  return dayjs(dt).format(pattern);
 }

@@ -20,6 +20,11 @@ export interface PostMeta {
 // 文章原始元数据
 export type RawPostMeta = Omit<PostMeta, "tag"> & { tagId: number };
 
+// 归档文章
+export interface ArchivedPosts {
+  [K: string]: PostMeta[];
+}
+
 // 首页统计数据
 export interface Statistics {
   posts: number;
