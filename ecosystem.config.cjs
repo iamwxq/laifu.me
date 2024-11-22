@@ -1,14 +1,10 @@
 module.exports = {
-  apps : [{
-    name   : "laifu",
-    script : "pnpm run start",
+  apps: [{
+    name: "laifu",
+    script: "pnpm run start",
     env_production: {
+      http2: true,
       NODE_ENV: "production",
-      ssl: {
-        cert: "./cert.pem",
-        key: "./key.pem"
-      },
-      http2: true
-    }
-  }]
-}
+    },
+  }],
+};

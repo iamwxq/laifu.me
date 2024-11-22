@@ -12,11 +12,20 @@ function Footer() {
       <em className="mt-4 not-italic sm:ml-4 sm:mt-0 sm:border-l sm:border-zinc-200 sm:pl-4">
         <span className="transition-all">Powered by&nbsp;</span>
         <Link
-          className="transition-all hover:text-zinc-800 dark:hover:text-zinc-200"
+          className="transition-all hover:text-zinc-800 dark:hover:text-zinc-50"
           target="_blank"
           to="https://remix.run"
         >
           Remix
+        </Link>
+      </em>
+      <em className="mt-4 not-italic sm:ml-4 sm:mt-0 sm:border-l sm:border-zinc-200 sm:pl-4">
+        <Link
+          className="transition-all hover:text-zinc-800 dark:hover:text-zinc-50"
+          target="_blank"
+          to="https://beian.miit.gov.cn/"
+        >
+          浙ICP备2024136142号-1
         </Link>
       </em>
 
