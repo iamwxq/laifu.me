@@ -32,41 +32,43 @@ function Archive() {
 
   return (
     <div className="mx-auto max-w-7xl">
-      <div className="py-4 text-black dark:text-white">
-        {Object.entries(aposts).map(([year, month]) => (
-          <ul key={year}>
-            <h3 className="text-2xl font-semibold text-black dark:text-white">
-              {year} 年
-            </h3>
+      <div className="space-y-4 divide-y divide-zinc-100 py-4 text-black dark:divide-zinc-800 dark:text-white">
+        {Object.entries(aposts)
+          .sort((a, b) => Number.parseInt(b[0]) - Number.parseInt(a[0]))
+          .map(([year, month]) => (
+            <ul key={year} className="pt-4">
+              <h3 className="text-2xl font-semibold text-black dark:text-white">
+                {year} 年
+              </h3>
 
-            <div className="ml-[2em] grid grid-cols-1 items-start gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {Object.entries(month)
-                .sort((a, b) => Number.parseInt(b[0]) - Number.parseInt(a[0]))
-                .map(([m, p]) => (
-                  <div key={m}>
-                    <h4 className="text-lg text-zinc-600 dark:text-zinc-300">{monthMap(m)}</h4>
+              <div className="ml-[2em] grid grid-cols-1 items-start gap-5 md:grid-cols-2 lg:grid-cols-3">
+                {Object.entries(month)
+                  .sort((a, b) => Number.parseInt(b[0]) - Number.parseInt(a[0]))
+                  .map(([m, p]) => (
+                    <div key={m}>
+                      <h4 className="text-lg text-zinc-600 dark:text-zinc-300">{monthMap(m)}</h4>
 
-                    <div className="flex flex-col gap-2">
-                      {p.map(post => (
-                        <li key={post.slug} className="ml-[1em]">
-                          <Link
-                            className="hover:underline"
-                            to={`/blog/${post.slug}`}
-                          >
-                            {post.title}
-                          </Link>
-                          <div className="flex items-center gap-1 text-sm text-zinc-400">
-                            <span>{fDatetime(post.createdAt)}</span>
-                            <Tag tag={post.tag} />
-                          </div>
-                        </li>
-                      ))}
+                      <div className="flex flex-col gap-2">
+                        {p.map(post => (
+                          <li key={post.slug} className="ml-[1em]">
+                            <Link
+                              className="hover:underline"
+                              to={`/blog/${post.slug}`}
+                            >
+                              {post.title}
+                            </Link>
+                            <div className="flex items-center gap-1 text-sm text-zinc-400">
+                              <span>{fDatetime(post.createdAt)}</span>
+                              <Tag tag={post.tag} />
+                            </div>
+                          </li>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
-            </div>
-          </ul>
-        ))}
+                  ))}
+              </div>
+            </ul>
+          ))}
       </div>
     </div>
   );
