@@ -22,7 +22,7 @@ export type RawPostMeta = Omit<PostMeta, "tag"> & { tagId: number };
 
 // 归档文章
 export interface ArchivedPosts {
-  [K: string]: PostMeta[];
+  [K: string]: { [V: string]: PostMeta[] };
 }
 
 // 首页统计数据

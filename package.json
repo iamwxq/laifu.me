@@ -2,7 +2,7 @@
   "name": "blog",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@9.14.2",
+  "packageManager": "pnpm@9.14.4",
   "sideEffects": false,
   "engines": {
     "node": ">=22.0.0"
@@ -24,9 +24,9 @@
   "dependencies": {
     "@mdx-js/rollup": "^3.1.0",
     "@prisma/client": "5.21.1",
-    "@remix-run/node": "^2.14.0",
-    "@remix-run/react": "^2.14.0",
-    "@remix-run/serve": "^2.14.0",
+    "@remix-run/node": "^2.15.0",
+    "@remix-run/react": "^2.15.0",
+    "@remix-run/serve": "^2.15.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "isbot": "^5.1.17",
@@ -40,16 +40,16 @@
     "remix-themes": "^1.5.1"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^3.9.2",
-    "@eslint-react/eslint-plugin": "^1.17.0",
-    "@remix-run/dev": "^2.14.0",
-    "@shikijs/rehype": "^1.23.1",
+    "@antfu/eslint-config": "^3.11.2",
+    "@eslint-react/eslint-plugin": "^1.17.3",
+    "@remix-run/dev": "^2.15.0",
+    "@shikijs/rehype": "^1.24.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
-    "eslint": "^9.15.0",
+    "eslint": "^9.16.0",
     "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-react-refresh": "^0.4.14",
+    "eslint-plugin-react-refresh": "^0.4.16",
     "eslint-plugin-tailwindcss": "^3.17.5",
     "gray-matter": "^4.0.3",
     "husky": "^9.1.7",
@@ -58,7 +58,7 @@
     "prisma": "^5.22.0",
     "tailwindcss": "^3.4.15",
     "tsx": "^4.19.2",
-    "typescript": "^5.6.3",
+    "typescript": "^5.7.2",
     "vite": "^5.4.11",
     "vite-tsconfig-paths": "^5.1.3"
   }
